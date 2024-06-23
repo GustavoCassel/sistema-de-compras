@@ -8,7 +8,7 @@ import {
   FloatingLabel,
 } from "react-bootstrap";
 
-import ButtonCarregamento from "./ButtonCarregamento";
+import ButtonCarregamento from "../componentes/ButtonCarregamento";
 import { logarUsuario } from "../infra/usuarios";
 
 export default function Login() {

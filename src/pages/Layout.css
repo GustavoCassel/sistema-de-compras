@@ -1,0 +1,37 @@
+.layout-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.horizontal-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.horizontal-menu li {
+  flex: 1; /* Faz os itens ocuparem igualmente o espaço disponível */
+  margin: 0 5px;
+}
+
+.horizontal-menu a {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  color: #000;
+  width: 100%; /* Faz o link ocupar toda a largura do item flex */
+  box-sizing: border-box; /* Inclui padding e border na largura total */
+}
+
+.horizontal-menu a:hover {
+  background-color: #ddd;
+}
