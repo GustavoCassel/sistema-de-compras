@@ -1,19 +1,13 @@
 import "./Fornecedores.css";
 
-import {
-  listarFornecedores,
-  inserirFornecedor,
-  atualizarFornecedor,
-  apagarFornecedor,
-} from "../infra/fornecedores";
+import { listarFornecedores, apagarFornecedor } from "../../infra/fornecedores";
 
-import CadastrarFornecedor from "./CadastrarFornecedor";
-
-import ButtonCarregamento from "../componentes/ButtonCarregamento";
+import ButtonCarregamento from "../../componentes/ButtonCarregamento";
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function Fornecedores() {
   const [fornecedores, setFornecedores] = useState([]);
@@ -55,9 +49,9 @@ export default function Fornecedores() {
     {
       name: "Editar",
       cell: (row) => (
-        <ButtonCarregamento variant="secondary" loadingMessage="Carregando...">
-          Editar
-        </ButtonCarregamento>
+        <Link to={`/editarFornecedor/${row.id}`}>
+          <Button variant="primary">Editar</Button>
+        </Link>
       ),
     },
     {
@@ -77,22 +71,44 @@ export default function Fornecedores() {
     },
   ];
 
-  async function handleClickCadastrarFornecedor() {}
-
-  async function handleClickEditarFornecedor(row) {}
-
   async function handleClickApagarFornecedor(row) {
-    await apagarFornecedor(row);
-    setFornecedores(fornecedores.filter((f) => f.id !== row.id));
-    console.log("Apagando fornecedor", row);
+    Swal.fire({
+      title: "Tem certeza?",
+      text: "Essa ação não poderá ser desfeita!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Sim, apagar!",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      try {
+        await apagarFornecedor(row);
+        setFornecedores(fornecedores.filter((f) => f.id !== row.id));
+
+        Swal.fire({
+          title: "Deletado!",
+          text: "O fornecedor foi apagado com sucesso.",
+          icon: "success",
+        });
+      } catch (error) {
+        Swal.fire({
+          title: "Erro!",
+          text: "Ocorreu um erro ao apagar o fornecedor.",
+          icon: "error",
+        });
+      }
+    });
   }
 
   return (
     <div>
       <Link to="/cadastrarFornecedor">
-        <Button variant="primary" onClick={handleClickCadastrarFornecedor}>
-          Cadastrar Fornecedor
-        </Button>
+        <Button variant="primary">Cadastrar Fornecedor</Button>
       </Link>
       <DataTable
         title="Fornecedores"

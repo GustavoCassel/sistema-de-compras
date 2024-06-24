@@ -13,6 +13,7 @@ import {
   collection,
   doc,
   addDoc,
+  getDoc,
   getDocs,
   updateDoc,
   deleteDoc,
@@ -26,15 +27,19 @@ export async function inserirFornecedor(fornecedor) {
   return docRef.id;
 }
 
-/*
 export async function atualizarFornecedor(fornecedor) {
-  const docRef = await updateDoc(getCollection(), fornecedor.id, fornecedor);
-  return docRef.id;
+  const docRef = doc(fornecedoresCollection, fornecedor.id);
+  await updateDoc(docRef, fornecedor);
 }
-*/
 
 export async function apagarFornecedor(fornecedor) {
   await deleteDoc(doc(fornecedoresCollection, fornecedor.id));
+}
+
+export async function buscarFornecedor(id) {
+  const docRef = doc(fornecedoresCollection, id);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
 }
 
 export async function listarFornecedores() {
@@ -52,6 +57,5 @@ export async function listarFornecedores() {
       console.error("Erro ao listar fornecedores: ", error);
     });
 
-  console.log(fornecedores);
   return fornecedores;
 }

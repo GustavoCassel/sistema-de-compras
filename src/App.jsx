@@ -2,12 +2,14 @@ import "./App.css";
 
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
-import Fornecedores from "./pages/Fornecedores";
-import CadastrarFornecedor from "./pages/CadastrarFornecedor";
 import Contatos from "./pages/Contatos";
 import Produtos from "./pages/Produtos";
 import Cotacoes from "./pages/Cotacoes";
 import NaoEncontrado from "./pages/NaoEncontrado";
+
+import Fornecedores from "./pages/Fornecedores/Fornecedores";
+import CadastrarFornecedor from "./pages/Fornecedores/CadastrarFornecedor";
+import EditarFornecedor from "./pages/Fornecedores/EditarFornecedor";
 
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -24,6 +26,7 @@ function App() {
           <Route path="produtos" element={<Produtos />} />
           <Route path="cotacoes" element={<Cotacoes />} />
           <Route path="cadastrarFornecedor" element={<CadastrarFornecedor />} />
+          <Route path="editarFornecedor/:id" element={<EditarFornecedor />} />
           <Route path="*" element={<NaoEncontrado />} />
         </Route>
       </Routes>

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import ButtonCarregamento from "../componentes/ButtonCarregamento";
+import React, { useEffect, useState } from "react";
+import ButtonCarregamento from "../../componentes/ButtonCarregamento";
 import { useNavigate } from "react-router-dom";
-import { inserirFornecedor } from "../infra/fornecedores";
+import { atualizarFornecedor, buscarFornecedor } from "../../infra/fornecedores";
+import Swal from "sweetalert2";
 import {
   Alert,
   Form,
@@ -10,22 +11,36 @@ import {
   Col,
   FloatingLabel,
 } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 
-export default function CadastrarFornecedor() {
+export default function EditarFornecedor() {
   const [nome, setNome] = useState("");
   const [ativo, setAtivo] = useState(true);
   const [bairro, setBairro] = useState("");
   const [cidade, setCidade] = useState("");
   const [estado, setEstado] = useState("");
   const [tipoPessoa, setTipoPessoa] = useState("Física");
+  const [botaoVisivel, setBotaoVisivel] = useState(true);
 
   const navigate = useNavigate();
 
-  const [erro, setErro] = useState("");
-  const [sucesso, setSucesso] = useState("");
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+
+  const { id } = useParams();
 
   async function handleSubmit() {
     const fornecedor = {
+      id,
       nome,
       ativo,
       bairro,
@@ -34,33 +49,76 @@ export default function CadastrarFornecedor() {
       tipoPessoa,
     };
 
-    setErro("");
-    setSucesso("");
-
     if (!nome || !bairro || !cidade || !estado || !tipoPessoa) {
-      setErro("Preencha todos os campos.");
+      Swal.fire({
+        icon: "error",
+        title: "Erro!",
+        text: "Preencha todos os campos obrigatórios.",
+      });
       return;
     }
 
-    const retorno = await inserirFornecedor(fornecedor);
+    const retorno = await atualizarFornecedor(fornecedor);
 
-    if (retorno.erro) {
-      setErro(retorno.erro);
+    if (retorno?.erro) {
+      Swal.fire({
+        icon: "error",
+        title: "Erro!",
+        text: retorno.erro,
+      });
       return;
     }
 
-    setSucesso("Fornecedor cadastrado com sucesso.\nRedirecionando...");
+    setBotaoVisivel(false);
+
+    Toast.fire({
+      icon: "success",
+      title: "Editado com sucesso!",
+    });
 
     setTimeout(() => {
       navigate("/fornecedores");
-    }, 500);
+    }, 1000);
   }
+
+  async function carregarFornecedor() {
+    const fornecedor = await buscarFornecedor(id);
+
+    if (!fornecedor) {
+      Toast.fire({
+        icon: "error",
+        title: "Fornecedor não encontrado.",
+      });
+
+      setTimeout(() => {
+        navigate("/fornecedores");
+      }, 500);
+
+      return;
+    }
+
+    setNome(fornecedor.nome);
+    setAtivo(fornecedor.ativo);
+    setBairro(fornecedor.bairro);
+    setCidade(fornecedor.cidade);
+    setEstado(fornecedor.estado);
+    setTipoPessoa(fornecedor.tipoPessoa);
+
+    Toast.fire({
+      icon: "success",
+      title: "Fornecedor carregado com sucesso.",
+    });
+  }
+
+  useEffect(() => {
+    carregarFornecedor();
+  }, []);
 
   return (
     <Container className="w-100 flex">
       <Row className="justify-content-md-center mt-5">
         <Col md="4" className="shadow p-3 mb-5 bg-body-tertiary rounded">
-          <h2 className="text-center mb-3">Cadastrar Fornecedor</h2>
+          <h2 className="text-center mb-3">Editar Fornecedor</h2>
           <FloatingLabel
             controlId="floatingInput"
             label="Nome"
@@ -137,27 +195,15 @@ export default function CadastrarFornecedor() {
             />
           </Form.Group>
 
-          {erro && (
-            <Alert variant="danger" className="mb-3">
-              {erro}
-            </Alert>
-          )}
-
-          {sucesso && (
-            <Alert variant="success" className="mb-3">
-              {sucesso}
-            </Alert>
-          )}
-
-          {!sucesso && (
+          {botaoVisivel && (
             <ButtonCarregamento
               variant="primary"
               type="submit"
               className="w-100"
               onClick={handleSubmit}
-              loadingMessage="Cadastrando..."
+              loadingMessage="Salvando..."
             >
-              Cadastrar
+              Salvar Alterações
             </ButtonCarregamento>
           )}
         </Col>
