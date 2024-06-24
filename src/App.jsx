@@ -2,7 +2,7 @@ import "./App.css";
 
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
-import Contatos from "./pages/Contatos";
+import Contatos from "./pages/Contatos/Contatos";
 import Produtos from "./pages/Produtos";
 import Cotacoes from "./pages/Cotacoes";
 import NaoEncontrado from "./pages/NaoEncontrado";

@@ -16,7 +16,7 @@
 }
 
 .horizontal-menu li {
-  flex: 1; /* Faz os itens ocuparem igualmente o espaço disponível */
+  flex: 1;
   margin: 0 5px;
 }
 
@@ -28,10 +28,15 @@
   background-color: #f0f0f0;
   border-radius: 5px;
   color: #000;
-  width: 100%; /* Faz o link ocupar toda a largura do item flex */
-  box-sizing: border-box; /* Inclui padding e border na largura total */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .horizontal-menu a:hover {
   background-color: #ddd;
+}
+
+Link {
+  text-decoration: none;
+  color: #000;
 }
