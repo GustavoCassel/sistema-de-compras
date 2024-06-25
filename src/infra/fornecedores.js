@@ -1,6 +1,7 @@
 /*
 Este arquivo deve conter as funções de acesso ao banco de dados para a entidade "Fornecedor".
 
+id (string) - ID do contato (gerado automaticamente)
 nome (string) - Nome do fornecedor
 ativo (boolean) - Indica se o fornecedor está ativo ou não (padrão: true)
 bairro (string) - Nome do bairro

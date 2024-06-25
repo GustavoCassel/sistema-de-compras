@@ -11,6 +11,8 @@ import Fornecedores from "./pages/Fornecedores/Fornecedores";
 import CadastrarFornecedor from "./pages/Fornecedores/CadastrarFornecedor";
 import EditarFornecedor from "./pages/Fornecedores/EditarFornecedor";
 
+import CadastrarContato from "./pages/Contatos/CadastrarContato";
+
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -23,6 +25,10 @@ function App() {
           <Route index element={<Home />} />
           <Route path="fornecedores" element={<Fornecedores />} />
           <Route path="contatos" element={<Contatos />} />
+          <Route
+            path="cadastrarContato/:idFornecedor"
+            element={<CadastrarContato />}
+          />
           <Route path="produtos" element={<Produtos />} />
           <Route path="cotacoes" element={<Cotacoes />} />
           <Route path="cadastrarFornecedor" element={<CadastrarFornecedor />} />

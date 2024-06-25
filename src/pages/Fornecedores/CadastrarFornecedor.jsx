@@ -19,6 +19,7 @@ export default function CadastrarFornecedor() {
   const [cidade, setCidade] = useState("");
   const [estado, setEstado] = useState("");
   const [tipoPessoa, setTipoPessoa] = useState("Física");
+  const [cpfCnpj, setCpfCnpj] = useState("");
   const [botaoVisivel, setBotaoVisivel] = useState(true);
 
   const navigate = useNavigate();
@@ -43,9 +44,10 @@ export default function CadastrarFornecedor() {
       cidade,
       estado,
       tipoPessoa,
+      cpfCnpj,
     };
 
-    if (!nome || !bairro || !cidade || !estado || !tipoPessoa) {
+    if (!nome || !bairro || !cidade || !estado || !tipoPessoa || !cpfCnpj) {
       Swal.fire({
         icon: "error",
         title: "Erro!",
@@ -94,7 +96,6 @@ export default function CadastrarFornecedor() {
               onChange={(e) => setNome(e.target.value)}
             />
           </FloatingLabel>
-
           <FloatingLabel
             controlId="floatingInput"
             label="Cidade"
@@ -107,7 +108,6 @@ export default function CadastrarFornecedor() {
               onChange={(e) => setCidade(e.target.value)}
             />
           </FloatingLabel>
-
           <FloatingLabel
             controlId="floatingInput"
             label="Bairro"
@@ -120,7 +120,6 @@ export default function CadastrarFornecedor() {
               onChange={(e) => setBairro(e.target.value)}
             />
           </FloatingLabel>
-
           <FloatingLabel
             controlId="floatingInput"
             label="Estado"
@@ -134,6 +133,19 @@ export default function CadastrarFornecedor() {
               maxLength={2}
               required
               onInput={(e) => (e.target.value = e.target.value.toUpperCase())}
+            />
+          </FloatingLabel>
+
+          <FloatingLabel
+            controlId="floatingInput"
+            label={tipoPessoa == "Física" ? "CPF" : "CNPJ"}
+            className="mb-3"
+          >
+            <Form.Control
+              type="text"
+              value={cpfCnpj}
+              placeholder=""
+              onChange={(e) => setCpfCnpj(e.target.value)}
             />
           </FloatingLabel>
 

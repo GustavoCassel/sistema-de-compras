@@ -32,6 +32,11 @@ export default function Fornecedores() {
       sortable: true,
     },
     {
+      name: "CPF/CNPJ",
+      selector: (row) => row.cpfCnpj,
+      sortable: true,
+    },
+    {
       name: "Bairro",
       selector: (row) => row.bairro,
       sortable: true,

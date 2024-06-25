@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import ButtonCarregamento from "../../componentes/ButtonCarregamento";
 import { useNavigate } from "react-router-dom";
-import { atualizarFornecedor, buscarFornecedor } from "../../infra/fornecedores";
+import {
+  atualizarFornecedor,
+  buscarFornecedor,
+} from "../../infra/fornecedores";
 import Swal from "sweetalert2";
 import {
   Alert,
@@ -20,6 +23,7 @@ export default function EditarFornecedor() {
   const [cidade, setCidade] = useState("");
   const [estado, setEstado] = useState("");
   const [tipoPessoa, setTipoPessoa] = useState("Física");
+  const [cpfCnpj, setCpfCnpj] = useState("");
   const [botaoVisivel, setBotaoVisivel] = useState(true);
 
   const navigate = useNavigate();
@@ -47,9 +51,10 @@ export default function EditarFornecedor() {
       cidade,
       estado,
       tipoPessoa,
+      cpfCnpj,
     };
 
-    if (!nome || !bairro || !cidade || !estado || !tipoPessoa) {
+    if (!nome || !bairro || !cidade || !estado || !tipoPessoa || !cpfCnpj) {
       Swal.fire({
         icon: "error",
         title: "Erro!",
@@ -103,6 +108,7 @@ export default function EditarFornecedor() {
     setCidade(fornecedor.cidade);
     setEstado(fornecedor.estado);
     setTipoPessoa(fornecedor.tipoPessoa);
+    setCpfCnpj(fornecedor.cpfCnpj);
 
     Toast.fire({
       icon: "success",
@@ -171,6 +177,19 @@ export default function EditarFornecedor() {
               maxLength={2}
               required
               onInput={(e) => (e.target.value = e.target.value.toUpperCase())}
+            />
+          </FloatingLabel>
+
+          <FloatingLabel
+            controlId="floatingInput"
+            label={tipoPessoa === "Física" ? "CPF" : "CNPJ"}
+            className="mb-3"
+          >
+            <Form.Control
+              type="text"
+              value={cpfCnpj}
+              placeholder=""
+              onChange={(e) => setCpfCnpj(e.target.value)}
             />
           </FloatingLabel>
 
