@@ -3,9 +3,7 @@
 // Endpoints
 export const HOME_ENDPOINT: string = "/";
 export const LOGIN_ENDPOINT: string = "/login";
+export const NOT_FOUND_ENDPOINT: string = "*";
 
 // Local storage keys
 export const USER_CREDENTIAL_LOCAL_KEY: string = "local_user";
-
-// Firebase entities collections paths
-export const SUPPLIERS_COLLECTION_PATH: string = "suppliers";

@@ -29,6 +29,9 @@ export default function Layout() {
               <Nav.Link as={NavLink} to={"/cotacoes"}>
                 Cotações
               </Nav.Link>
+              <Nav.Link as={NavLink} to={"/login"}>
+                Login
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

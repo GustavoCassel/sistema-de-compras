@@ -1,34 +1,38 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { createContext, useState } from "react";
-import { Route, BrowserRouter as Router, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import { HOME_ENDPOINT, LOGIN_ENDPOINT } from "./model/constants";
-import Login from "./pages/Login";
-import Layout from "./pages/Layout";
+import { HOME_ENDPOINT, LOGIN_ENDPOINT, NOT_FOUND_ENDPOINT } from "./constants";
 import Home from "./pages/Home";
+import Layout from "./pages/Layout";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
-type Theme = "light" | "dark";
+function PrivateRoute({ component: Component }: any) {
+  const isLogged = true;
 
-export const ThemeProvider = createContext({
-  theme: "light",
-  setTheme: (theme: Theme) => {},
-});
+  return isLogged ? <Component /> : <Navigate to={LOGIN_ENDPOINT} />;
+}
 
 function App() {
-  const [theme, setTheme] = useState<Theme>("light");
-
   return (
-    <ThemeProvider.Provider value={{ theme, setTheme }}>
-      <Router>
-        <Routes>
-          <Route path={HOME_ENDPOINT} element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path={LOGIN_ENDPOINT} element={<Login />} />
-          </Route>
-        </Routes>
-      </Router>
-    </ThemeProvider.Provider>
+    <BrowserRouter>
+      <Routes>
+        <Route path={HOME_ENDPOINT} element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path={LOGIN_ENDPOINT} element={<Login />} />
+          <Route path={NOT_FOUND_ENDPOINT} element={<NotFound />} />
+          <Route
+            path="/teste"
+            element={
+              <PrivateRoute>
+                <h1>Teste</h1>
+              </PrivateRoute>
+            }
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

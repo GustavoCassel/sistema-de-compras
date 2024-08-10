@@ -1,16 +1,21 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Col, Container, FloatingLabel, Form, Row, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 //import ButtonCarregamento from "../componentes/ButtonCarregamento";
-import { loginAndSaveSession } from "../model/firebase";
+import { loginAndSaveSession, navigateByLoginState } from "../api/firebase";
 import { FirebaseError } from "firebase/app";
+import { USER_CREDENTIAL_LOCAL_KEY } from "../constants";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    navigateByLoginState(navigate);
+  }, []);
 
   const Toast = Swal.mixin({
     toast: true,
@@ -47,11 +52,19 @@ export default function Login() {
       return;
     }
 
-    Swal.fire("Sucesso", "Login realizado com sucesso.\nRedirecionando...", "success");
+    Toast.fire({
+      icon: "success",
+      title: "Login realizado com sucesso.\nRedirecionando...",
+    });
 
     setTimeout(() => {
       navigate("/");
     }, 1000);
+  }
+
+  function preencherLoginAdmin() {
+    setEmail("usuario@react.com");
+    setPassword("react123");
   }
 
   return (
@@ -66,21 +79,12 @@ export default function Login() {
             <Form.Control type="password" value={password} placeholder="" onChange={(e) => setPassword(e.target.value)} />
           </FloatingLabel>
 
-          {/*
-          {!sucesso && (
-            <ButtonCarregamento
-              variant="primary"
-              type="submit"
-              className="w-100"
-              onClick={handleSubmit}
-              loadingMessage="Entrando..."
-            >
-              Login
-            </ButtonCarregamento>
-          )}
-          */}
           <Button variant="primary" type="submit" className="w-100" onClick={handleSubmit}>
             Login
+          </Button>
+
+          <Button variant="primary" onClick={preencherLoginAdmin}>
+            preencher login admin
           </Button>
         </Col>
       </Row>
