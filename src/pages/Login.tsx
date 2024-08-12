@@ -1,21 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import { Col, Container, FloatingLabel, Form, Row, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-
-//import ButtonCarregamento from "../componentes/ButtonCarregamento";
-import { loginAndSaveSession, navigateByLoginState } from "../api/firebase";
 import { FirebaseError } from "firebase/app";
-import { USER_CREDENTIAL_LOCAL_KEY } from "../constants";
+import { useState } from "react";
+import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
+import Swal from "sweetalert2";
+import { loginAndSaveSession } from "../api/firebase";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    navigateByLoginState(navigate);
-  }, []);
 
   const Toast = Swal.mixin({
     toast: true,
@@ -42,12 +35,10 @@ export default function Login() {
       await loginAndSaveSession(email, password);
     } catch (error) {
       if (error instanceof FirebaseError) {
-        console.error("Erro ao realizar login: ", error.code, error.message);
         Swal.fire("Erro", "Email ou senha inválidos.", "warning");
         return;
       }
 
-      console.error("Erro ao realizar login: ", error);
       Swal.fire("Erro", "Erro ao realizar login.", "error");
       return;
     }

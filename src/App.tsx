@@ -1,35 +1,26 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-
-import { HOME_ENDPOINT, LOGIN_ENDPOINT, NOT_FOUND_ENDPOINT } from "./constants";
+import { CREATE_SUPPLIER_ENDPOINT, EDIT_SUPPLIER_ENDPOINT, HOME_ENDPOINT, LOGIN_ENDPOINT, NOT_FOUND_ENDPOINT, SUPPLIERS_ENDPOINT } from "./constants";
+import AppHeader from "./pages/AppHeader";
+import CreateSupplier from "./pages/CreateSupplier";
+import EditSupplier from "./pages/EditSupplier";
 import Home from "./pages/Home";
-import Layout from "./pages/Layout";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-
-function PrivateRoute({ component: Component }: any) {
-  const isLogged = true;
-
-  return isLogged ? <Component /> : <Navigate to={LOGIN_ENDPOINT} />;
-}
+import Suppliers from "./pages/Suppliers";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={HOME_ENDPOINT} element={<Layout />}>
+        <Route path={HOME_ENDPOINT} element={<AppHeader />}>
           <Route index element={<Home />} />
           <Route path={LOGIN_ENDPOINT} element={<Login />} />
           <Route path={NOT_FOUND_ENDPOINT} element={<NotFound />} />
-          <Route
-            path="/teste"
-            element={
-              <PrivateRoute>
-                <h1>Teste</h1>
-              </PrivateRoute>
-            }
-          />
+          <Route path={SUPPLIERS_ENDPOINT} element={<Suppliers />} />
+          <Route path={CREATE_SUPPLIER_ENDPOINT} element={<CreateSupplier />} />
+          <Route path={`${EDIT_SUPPLIER_ENDPOINT}/:id`} element={<EditSupplier />} />
         </Route>
       </Routes>
     </BrowserRouter>
