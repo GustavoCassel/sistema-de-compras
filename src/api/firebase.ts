@@ -38,7 +38,7 @@ export function navigateByLoginState(navigate: NavigateFunction) {
 
   const route = window.location.pathname;
 
-  // Se o usuário estiver logado e tentar acessar a página de login, redireciona para a home
+  // if the user is already logged in, redirect to home if the user tries to access the login page
   if (route === LOGIN_ENDPOINT) {
     navigate(HOME_ENDPOINT);
   }
