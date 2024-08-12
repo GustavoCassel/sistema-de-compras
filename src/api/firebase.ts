@@ -57,7 +57,7 @@ function getLocalCredentials(): UserCredential | null {
     return null;
   }
 
-  return JSON.parse(user);
+  return JSON.parse(user) as UserCredential;
 }
 
 function removeLocalCredentials() {
