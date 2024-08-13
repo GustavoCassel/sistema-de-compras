@@ -1,82 +1,91 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
-import { useState } from "react";
 import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
-import Swal from "sweetalert2";
-import { loginAndSaveSession } from "../api/firebase";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { getFirebaseErrorDescription, loginAndSaveSession } from "../api/firebase";
+import { Toast } from "../utils/Alerts";
+import { useState } from "react";
+
+const schema = z.object({
+  email: z.string().email({ message: "Email inválido" }),
+  password: z.string().min(6, { message: "A senha deve ter pelo menos 6 caracteres" }),
+});
+
+type LoginData = z.infer<typeof schema>;
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
+  const [buttonVisible, setButtonVisible] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginData>({
+    resolver: zodResolver(schema),
   });
 
-  async function handleSubmit() {
-    if (!email || !password) {
-      Toast.fire({
-        icon: "warning",
-        title: "Preencha todos os campos.",
-      });
-      return;
-    }
+  const navigate = useNavigate();
 
+  const onSubmit: SubmitHandler<LoginData> = async ({ email, password }) => {
     try {
       await loginAndSaveSession(email, password);
     } catch (error) {
       if (error instanceof FirebaseError) {
-        Swal.fire("Erro", "Email ou senha inválidos.", "warning");
+        const firebaseError = error as FirebaseError;
+        setError("root", {
+          message: getFirebaseErrorDescription(firebaseError.code),
+        });
         return;
       }
 
-      Swal.fire("Erro", "Erro ao realizar login.", "error");
+      setError("root", {
+        message: "Erro ao realizar login",
+      });
       return;
     }
 
+    setButtonVisible(false);
+
     Toast.fire({
       icon: "success",
-      title: "Login realizado com sucesso.\nRedirecionando...",
+      title: "Login realizado com sucesso",
+      text: "Redirecionando para a página inicial.",
     });
 
     setTimeout(() => {
       navigate("/");
     }, 1000);
-  }
-
-  function preencherLoginAdmin() {
-    setEmail("usuario@react.com");
-    setPassword("react123");
-  }
+  };
 
   return (
     <Container>
       <Row className="justify-content-md-center">
         <Col md="4">
           <h2 className="text-center mb-3">Login</h2>
-          <FloatingLabel controlId="floatingInput" label="Digite seu email" className="mb-3">
-            <Form.Control type="email" value={email} placeholder="" onChange={(e) => setEmail(e.target.value)} />
-          </FloatingLabel>
-          <FloatingLabel controlId="floatingPassword" label="Digite sua senha" className="mb-3">
-            <Form.Control type="password" value={password} placeholder="" onChange={(e) => setPassword(e.target.value)} />
-          </FloatingLabel>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <FloatingLabel controlId="floatingInput" label="Digite seu email" className="mb-3">
+              <Form.Control type="email" placeholder="" isInvalid={!!errors.email} {...register("email")} />
+              <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
+            </FloatingLabel>
 
-          <Button variant="primary" type="submit" className="w-100" onClick={handleSubmit}>
-            Login
-          </Button>
+            <FloatingLabel controlId="floatingPassword" label="Digite sua senha" className="mb-3">
+              <Form.Control type="password" placeholder="" isInvalid={!!errors.password} {...register("password")} />
+              <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
+            </FloatingLabel>
 
-          <Button variant="primary" onClick={preencherLoginAdmin}>
-            preencher login admin
-          </Button>
+            {buttonVisible && (
+              <>
+                <Button variant="primary" type="submit" className="w-100" disabled={isSubmitting}>
+                  {isSubmitting ? "Entrando..." : "Entrar"}
+                </Button>
+                <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                  {errors.root?.message}
+                </Form.Control.Feedback>
+              </>
+            )}
+          </Form>
         </Col>
       </Row>
     </Container>
