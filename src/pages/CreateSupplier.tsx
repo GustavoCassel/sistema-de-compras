@@ -3,7 +3,7 @@ import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstra
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { SUPPLIERS_ENDPOINT } from "../constants";
-import { Supplier, SUPPLIER_TYPES, SupplierType, SupplierRepository } from "../models/Supplier";
+import { Supplier, SUPPLIER_TYPES, SupplierRepository, SupplierType } from "../models/Supplier";
 
 export default function CreateSupplier() {
   const [name, setName] = useState("");
@@ -12,7 +12,9 @@ export default function CreateSupplier() {
   const [state, setState] = useState("");
   const [supplierType, setSupplierType] = useState<SupplierType>("Física");
   const [document, setDocument] = useState("");
-  const [buttonVisible, setButtonVisible] = useState(true);
+  const [cep, setCep] = useState("");
+  const [buttonActive, setButtonActive] = useState(true);
+  const [buttonText, setButtonText] = useState("Cadastrar");
 
   const navigate = useNavigate();
 
@@ -38,6 +40,9 @@ export default function CreateSupplier() {
       return;
     }
 
+    setButtonActive(false);
+    setButtonText("Cadastrando...");
+
     try {
       const supplier = new Supplier();
       supplier.name = name;
@@ -55,10 +60,13 @@ export default function CreateSupplier() {
         text: "Erro ao cadastrar fornecedor.",
       });
 
+      setButtonActive(true);
+      setButtonText("Cadastrar");
+
       return;
     }
 
-    setButtonVisible(false);
+    setButtonText("Cadastrado!");
 
     Toast.fire({
       icon: "success",
@@ -76,7 +84,7 @@ export default function CreateSupplier() {
         <Col md="4" className="shadow p-3 mb-5 bg-body-tertiary rounded">
           <h2 className="text-center mb-3">Cadastrar Fornecedor</h2>
           <FloatingLabel controlId="floatingInput" label="Nome" className="mb-3">
-            <Form.Control type="text" value={name} placeholder="" onChange={(e) => setName(e.target.value)} />
+            <Form.Control type="text" value={name} placeholder="" onChange={(e) => setName(e.target.value)} required />
           </FloatingLabel>
           <FloatingLabel controlId="floatingInput" label="Cidade" className="mb-3">
             <Form.Control type="text" value={city} placeholder="" onChange={(e) => setCity(e.target.value)} />
@@ -85,8 +93,12 @@ export default function CreateSupplier() {
             <Form.Control type="text" value={state} placeholder="" onChange={(e) => setState(e.target.value.toUpperCase())} maxLength={2} required />
           </FloatingLabel>
 
-          <FloatingLabel controlId="floatingInput" label={supplierType == "Física" ? "CPF" : "CNPJ"} className="mb-3">
+          <FloatingLabel controlId="floatingInput" label="CPF/CNPJ" className="mb-3">
             <Form.Control type="text" value={document} placeholder="" onChange={(e) => setDocument(e.target.value)} />
+          </FloatingLabel>
+
+          <FloatingLabel controlId="floatingInput" label="CEP" className="mb-3">
+            <Form.Control type="text" value={cep} placeholder="" onChange={(e) => setCep(e.target.value)} minLength={8} maxLength={8} required />
           </FloatingLabel>
 
           <Form.Group controlId="tipoPessoa">
@@ -104,11 +116,9 @@ export default function CreateSupplier() {
             <Form.Check type="checkbox" label="Ativo" checked={active} onChange={(e) => setActive(e.target.checked)} />
           </Form.Group>
 
-          {buttonVisible && (
-            <Button variant="primary" type="submit" className="w-100" onClick={handleSubmit}>
-              Cadastrar
-            </Button>
-          )}
+          <Button variant="primary" type="submit" className="w-100" onClick={handleSubmit} disabled={!buttonActive}>
+            {buttonText}
+          </Button>
         </Col>
       </Row>
     </Container>

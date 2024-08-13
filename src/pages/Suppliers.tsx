@@ -67,7 +67,7 @@ export default function Suppliers() {
   async function handleClickApagarFornecedor(supplier: Supplier) {
     Swal.fire({
       title: "Tem certeza?",
-      text: "Essa ação não poderá ser desfeita!",
+      text: `Essa ação não poderá ser desfeita!\n\nDeseja apagar o fornecedor ${supplier.name}?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
