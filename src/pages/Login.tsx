@@ -64,7 +64,7 @@ export default function Login() {
       <Row className="justify-content-md-center">
         <Col md="4">
           <h2 className="text-center mb-3">Login</h2>
-          <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form>
             <FloatingLabel controlId="floatingInput" label="Digite seu email" className="mb-3">
               <Form.Control type="email" placeholder="" isInvalid={!!errors.email} {...register("email")} />
               <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
@@ -77,7 +77,7 @@ export default function Login() {
 
             {buttonVisible && (
               <>
-                <Button variant="primary" type="submit" className="w-100" disabled={isSubmitting}>
+                <Button variant="primary" type="submit" className="w-100" disabled={isSubmitting} onClick={handleSubmit(onSubmit)}>
                   {isSubmitting ? "Entrando..." : "Entrar"}
                 </Button>
                 <Form.Control.Feedback type="invalid" className="d-block mt-2">
