@@ -1,12 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
 import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { getFirebaseErrorDescription, loginAndSaveSession } from "../context/FirebaseContext";
+import { auth, getFirebaseErrorDescription } from "../context/FirebaseContext";
+import { HOME_ENDPOINT } from "../data/constants";
 import { Toast } from "../utils/Alerts";
-import { useState } from "react";
 
 const schema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -16,7 +18,9 @@ const schema = z.object({
 type LoginData = z.infer<typeof schema>;
 
 export default function Login() {
+  const navigate = useNavigate();
   const [buttonVisible, setButtonVisible] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -26,11 +30,9 @@ export default function Login() {
     resolver: zodResolver(schema),
   });
 
-  const navigate = useNavigate();
-
   const onSubmit: SubmitHandler<LoginData> = async ({ email, password }) => {
     try {
-      await loginAndSaveSession(email, password);
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       if (error instanceof FirebaseError) {
         const firebaseError = error as FirebaseError;
@@ -55,7 +57,7 @@ export default function Login() {
     });
 
     setTimeout(() => {
-      navigate("/");
+      navigate(HOME_ENDPOINT);
     }, 1000);
   };
 

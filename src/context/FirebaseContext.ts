@@ -1,8 +1,9 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut, UserCredential } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { NavigateFunction } from "react-router-dom";
-import { HOME_ENDPOINT, LOGIN_ENDPOINT, USER_CREDENTIAL_LOCAL_KEY } from "../data/constants";
+import { HOME_ENDPOINT, LOGIN_ENDPOINT } from "../data/constants";
+import { Toast } from "../utils/Alerts";
 
 const firebaseOptions = getFirebaseOptions();
 
@@ -10,28 +11,13 @@ export const app = initializeApp(firebaseOptions);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 
-export async function loginAndSaveSession(email: string, password: string): Promise<UserCredential> {
-  const credentials = await signInWithEmailAndPassword(auth, email, password);
-  saveLocalCredentials(credentials);
-  return credentials;
-}
-
-export async function createUserAndSaveSession(email: string, password: string): Promise<UserCredential> {
-  const credentials = await createUserWithEmailAndPassword(auth, email, password);
-  saveLocalCredentials(credentials);
-  return credentials;
-}
-
-export async function signOutAndRemoveSession() {
-  await signOut(auth);
-  removeLocalCredentials();
-  window.location.reload();
-}
-
 export function navigateByLoginState(navigate: NavigateFunction) {
-  const user = getLocalCredentials();
-
-  if (!user) {
+  console.log(auth.currentUser);
+  if (!auth.currentUser) {
+    Toast.fire({
+      icon: "info",
+      title: "Faça login para acessar a aplicação",
+    });
     navigate(LOGIN_ENDPOINT);
     return;
   }
@@ -40,28 +26,14 @@ export function navigateByLoginState(navigate: NavigateFunction) {
 
   // if the user is already logged in, redirect to home if the user tries to access the login page
   if (route === LOGIN_ENDPOINT) {
+    Toast.fire({
+      icon: "info",
+      title: "Você já está logado",
+      text: "Redirecionando para a página inicial.",
+    });
+
     navigate(HOME_ENDPOINT);
   }
-}
-
-function saveLocalCredentials(user: UserCredential) {
-  const json = JSON.stringify(user);
-
-  window.localStorage.setItem(USER_CREDENTIAL_LOCAL_KEY, json);
-}
-
-function getLocalCredentials(): UserCredential | null {
-  const user = window.localStorage.getItem(USER_CREDENTIAL_LOCAL_KEY);
-
-  if (!user) {
-    return null;
-  }
-
-  return JSON.parse(user) as UserCredential;
-}
-
-function removeLocalCredentials() {
-  window.localStorage.removeItem(USER_CREDENTIAL_LOCAL_KEY);
 }
 
 function getFirebaseOptions(): FirebaseOptions {
