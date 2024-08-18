@@ -1,5 +1,5 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
-import { firestore } from "../api/firebase";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { firestore } from "../context/FirebaseContext";
 
 export type SupplierType = "Física" | "Jurídica";
 

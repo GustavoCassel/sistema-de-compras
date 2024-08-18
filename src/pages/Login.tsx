@@ -4,7 +4,7 @@ import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstra
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { getFirebaseErrorDescription, loginAndSaveSession } from "../api/firebase";
+import { getFirebaseErrorDescription, loginAndSaveSession } from "../context/FirebaseContext";
 import { Toast } from "../utils/Alerts";
 import { useState } from "react";
 

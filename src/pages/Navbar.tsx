@@ -1,11 +1,11 @@
-import "./AppHeader.css";
+import "./Navbar.css";
 
 import { Outlet, NavLink } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { SUPPLIERS_ENDPOINT } from "../constants";
+import { SUPPLIERS_ENDPOINT } from "../data/constants";
 
 export default function AppHeader() {
   return (

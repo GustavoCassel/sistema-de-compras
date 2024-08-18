@@ -3,8 +3,8 @@ import Button from "react-bootstrap/Button";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { Supplier, SupplierRepository } from "../models/Supplier";
-import { CREATE_SUPPLIER_ENDPOINT, EDIT_SUPPLIER_ENDPOINT } from "../constants";
+import { Supplier, SupplierRepository } from "../../models/SupplierRepository";
+import { CREATE_SUPPLIER_ENDPOINT, EDIT_SUPPLIER_ENDPOINT } from "../../data/constants";
 
 export default function Suppliers() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);

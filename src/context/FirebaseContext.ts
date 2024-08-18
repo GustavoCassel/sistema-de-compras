@@ -2,7 +2,7 @@ import { FirebaseOptions, initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut, UserCredential } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { NavigateFunction } from "react-router-dom";
-import { HOME_ENDPOINT, LOGIN_ENDPOINT, USER_CREDENTIAL_LOCAL_KEY } from "../constants";
+import { HOME_ENDPOINT, LOGIN_ENDPOINT, USER_CREDENTIAL_LOCAL_KEY } from "../data/constants";
 
 const firebaseOptions = getFirebaseOptions();
 
