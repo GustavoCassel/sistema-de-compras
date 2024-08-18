@@ -48,17 +48,15 @@ export default function Suppliers() {
       cell: (supplier: Supplier) => (
         <>
           <Link to={`${EDIT_SUPPLIER_ENDPOINT}/${supplier.id}`}>
-            <Button variant="primary">Editar</Button>
+            <Button variant="primary" className="bi bi-pencil" />
           </Link>
-
           <Button
             variant="danger"
+            className="bi bi-trash"
             onClick={async () => {
               await handleClickApagarFornecedor(supplier);
             }}
-          >
-            Apagar
-          </Button>
+          />
         </>
       ),
     },
