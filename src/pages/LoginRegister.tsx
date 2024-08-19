@@ -78,10 +78,10 @@ export default function Auth() {
     }, 1000);
   };
 
-  const toggleMode = () => {
+  function toggleMode() {
     setIsLoginMode((prevMode) => !prevMode);
     reset();
-  };
+  }
 
   return (
     <Container>
