@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
-import { navigateByLoginState } from "./context/FirebaseContext";
+import { navigateByLoginState, auth } from "./context/FirebaseContext";
 import { CREATE_SUPPLIER_ENDPOINT, EDIT_SUPPLIER_ENDPOINT, HOME_ENDPOINT, LOGIN_ENDPOINT, NOT_FOUND_ENDPOINT, SUPPLIERS_ENDPOINT } from "./data/constants";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -19,6 +19,10 @@ function App() {
   useEffect(() => {
     navigateByLoginState(navigate);
   }, [navigate]);
+
+  auth.onAuthStateChanged(() => {
+    navigateByLoginState(navigate);
+  });
 
   return (
     <Routes>

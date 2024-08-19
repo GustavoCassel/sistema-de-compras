@@ -11,8 +11,9 @@ export const app = initializeApp(firebaseOptions);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 
-export function navigateByLoginState(navigate: NavigateFunction) {
-  console.log(auth.currentUser);
+export async function navigateByLoginState(navigate: NavigateFunction) {
+  await auth.authStateReady();
+
   if (!auth.currentUser) {
     Toast.fire({
       icon: "info",
