@@ -44,11 +44,6 @@ export default function Auth() {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
-        Toast.fire({
-          icon: "success",
-          title: "Registro realizado com sucesso",
-          text: "Você será redirecionado para a página inicial.",
-        });
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
