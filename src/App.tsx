@@ -9,7 +9,6 @@ import Home from "./pages/Home";
 import LoginRegister from "./pages/LoginRegister";
 import Navbar from "./pages/Navbar";
 import NotFound from "./pages/NotFound";
-
 import Suppliers from "./pages/Suppliers";
 import CreateSupplier from "./pages/Suppliers/CreateSupplier";
 import EditSupplier from "./pages/Suppliers/EditSupplier";

@@ -1,15 +1,18 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { firestore } from "../context/FirebaseContext";
 
-export type SupplierType = "Física" | "Jurídica";
+export enum SupplierType {
+  Physical = "Física",
+  Legal = "Jurídica",
+}
 
-export const SUPPLIER_TYPES: SupplierType[] = ["Física", "Jurídica"];
+export const SUPPLIER_TYPES: SupplierType[] = Object.values(SupplierType);
 
 export class Supplier {
   id: string = "";
   name: string = "";
   active: boolean = true;
-  supplierType: SupplierType = "Física";
+  supplierType: SupplierType = SupplierType.Physical;
   document: string = "";
   city: string = "";
   state: string = "";

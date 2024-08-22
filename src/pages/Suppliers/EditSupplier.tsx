@@ -10,7 +10,7 @@ export default function EditSupplier() {
   const [active, setActive] = useState(true);
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [supplierType, setSupplierType] = useState<SupplierType>("Física");
+  const [supplierType, setSupplierType] = useState<SupplierType>(SupplierType.Physical);
   const [document, setDocument] = useState("");
   const [buttonVisible, setButtonVisible] = useState(true);
 
