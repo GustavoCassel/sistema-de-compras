@@ -1,108 +1,47 @@
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import DataTable from "react-data-table-component";
-import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
+import Loading from "../../components/Loading";
+import { CrudOperation } from "../../data/constants";
 import { Supplier, SupplierRepository } from "../../models/SupplierRepository";
-import { CREATE_SUPPLIER_ENDPOINT, EDIT_SUPPLIER_ENDPOINT } from "../../data/constants";
+import SupplierModal from "./SupplierModal";
+import SuppliersTable from "./SuppliersTable";
 
 export default function Suppliers() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [pending, setPending] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [crudOperation, setCrudOperation] = useState<CrudOperation>(CrudOperation.Create);
+  const [id, setId] = useState<string | undefined>();
 
   useEffect(() => {
-    SupplierRepository.getAll().then((suppliers) => {
-      setSuppliers(suppliers);
-      setPending(false);
-    });
+    updateSupplierTable();
   }, []);
 
-  const columns = [
-    {
-      name: "Nome",
-      selector: (supplier: Supplier) => supplier.name,
-      sortable: true,
-    },
-    {
-      name: "Tipo Pessoa",
-      selector: (supplier: Supplier) => supplier.supplierType,
-      sortable: true,
-    },
-    {
-      name: "CPF/CNPJ",
-      selector: (supplier: Supplier) => supplier.document,
-      sortable: true,
-    },
-    {
-      name: "Cidade",
-      selector: (supplier: Supplier) => supplier.city,
-      sortable: true,
-    },
-    {
-      name: "Estado",
-      selector: (supplier: Supplier) => supplier.state,
-      sortable: true,
-    },
-    {
-      name: "Ações",
-      cell: (supplier: Supplier) => (
-        <>
-          <Link to={`${EDIT_SUPPLIER_ENDPOINT}/${supplier.id}`}>
-            <Button variant="primary" className="bi bi-pencil" />
-          </Link>
-          <Button
-            variant="danger"
-            className="bi bi-trash"
-            onClick={async () => {
-              await handleClickApagarFornecedor(supplier);
-            }}
-          />
-        </>
-      ),
-    },
-  ];
-
-  async function handleClickApagarFornecedor(supplier: Supplier) {
-    Swal.fire({
-      title: "Tem certeza?",
-      text: `Essa ação não poderá ser desfeita!\n\nDeseja apagar o fornecedor ${supplier.name}?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      confirmButtonText: "Sim, apagar!",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-    }).then(async (result) => {
-      if (!result.isConfirmed) {
-        return;
-      }
-
-      try {
-        await SupplierRepository.delete(supplier.id);
-        setSuppliers(suppliers.filter((f) => f.id !== supplier.id));
-
-        Swal.fire({
-          title: "Deletado!",
-          text: "O fornecedor foi apagado com sucesso.",
-          icon: "success",
-        });
-      } catch (error) {
-        Swal.fire({
-          title: "Erro!",
-          text: "Ocorreu um erro ao apagar o fornecedor.",
-          icon: "error",
-        });
-      }
+  function updateSupplierTable() {
+    SupplierRepository.getAll().then((suppliers) => {
+      setSuppliers(suppliers);
+      setLoading(false);
     });
+  }
+
+  function showModal(crudOperation: CrudOperation, id?: string) {
+    setModalVisible(true);
+    setCrudOperation(crudOperation);
+    setId(id);
   }
 
   return (
     <div>
-      <h2>Fornecedores</h2>
-      <Link to={CREATE_SUPPLIER_ENDPOINT}>
-        <Button variant="primary">Cadastrar Fornecedor</Button>
-      </Link>
-      <DataTable columns={columns} data={suppliers} progressPending={pending} striped pagination paginationPerPage={10} highlightOnHover dense />
+      <h2 className="text-center">Fornecedores</h2>
+
+      <Button variant="primary" className=" float-end" onClick={() => showModal(CrudOperation.Create)}>
+        <i className="bi bi-plus-square me-2" />
+        Cadastrar Fornecedor
+      </Button>
+
+      <SupplierModal visible={modalVisible} setVisible={setModalVisible} crudOperation={crudOperation} id={id} updateSupplierTable={updateSupplierTable} />
+
+      {loading ? <Loading /> : <SuppliersTable suppliers={suppliers} showModal={showModal} />}
     </div>
   );
 }

@@ -16,6 +16,7 @@ export class Supplier {
   document: string = "";
   city: string = "";
   state: string = "";
+  cep: string = "";
 }
 
 const suppliersCollection = collection(firestore, "suppliers");

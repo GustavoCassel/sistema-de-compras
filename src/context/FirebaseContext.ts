@@ -1,5 +1,5 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, updateProfile, User, UserCredential } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { NavigateFunction } from "react-router-dom";
 import { HOME_ENDPOINT, LOGIN_ENDPOINT } from "../data/constants";
@@ -10,6 +10,26 @@ const firebaseOptions = getFirebaseOptions();
 export const app = initializeApp(firebaseOptions);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
+
+export function isAdmin() {
+  // sei que é gambiarra, mas é só para exemplificar ;-;
+  return auth.currentUser?.displayName === "admin";
+}
+
+export async function makeAdmin(user: User | null) {
+  if (!user) {
+    return;
+  }
+  await updateProfile(user, {
+    displayName: "admin",
+  });
+}
+
+export async function removeAdmin(user: User) {
+  await updateProfile(user, {
+    displayName: "",
+  });
+}
 
 export async function navigateByLoginState(navigate: NavigateFunction) {
   await auth.authStateReady();
