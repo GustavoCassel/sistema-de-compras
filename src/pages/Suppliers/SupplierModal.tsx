@@ -15,7 +15,7 @@ type SupplierModalProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   crudOperation: CrudOperation;
-  id?: string;
+  supplier?: Supplier;
   updateSupplierTable: () => void;
 };
 
@@ -27,12 +27,12 @@ const schema = z.object({
   state: z.string().regex(/^[A-Z]{2}$/, "Somente sigla do estado"),
   document: z.string(),
   cep: z.string().regex(/^\d{5}-\d{3}$/, "CEP inválido"),
-  supplierType: z.nativeEnum(SupplierType, { message: "Tipo de fornecedor deve ser 'Física' ou 'Jurídica'" }),
+  supplierType: z.nativeEnum(SupplierType, { message: "Tipo de fornecedor inválido" }),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export default function SupplierModal({ visible, setVisible, crudOperation, id, updateSupplierTable }: SupplierModalProps) {
+export default function SupplierModal({ visible, setVisible, crudOperation, supplier, updateSupplierTable }: SupplierModalProps) {
   const {
     register,
     handleSubmit,
@@ -43,6 +43,7 @@ export default function SupplierModal({ visible, setVisible, crudOperation, id, 
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: new Supplier(),
   });
 
   const [buttonActive, setButtonActive] = useState(true);
@@ -57,17 +58,16 @@ export default function SupplierModal({ visible, setVisible, crudOperation, id, 
   const watchSupplierType = watch("supplierType");
 
   useEffect(() => {
-    if (!visible) return;
+    setSupplierFieldsIntoForm();
+
     updateFormByCrudOperation();
-    if (!id) return;
-    loadSupplierData();
-  }, [visible]);
+  }, [crudOperation, supplier, visible]);
 
   function updateFormByCrudOperation() {
-    reset(new Supplier(), { keepValues: false });
     setFormDisabled(false);
     setButtonVisible(true);
     if (crudOperation === CrudOperation.Create) {
+      reset(new Supplier(), { keepValues: false });
       setSubmittingButtonText("Cadastrando...");
       setButtonText("Cadastrar");
       setHeaderText("Cadastrar Fornecedor");
@@ -100,43 +100,31 @@ export default function SupplierModal({ visible, setVisible, crudOperation, id, 
 
   function handleClose() {
     setVisible(false);
-    reset(new Supplier(), { keepValues: false });
   }
 
-  async function loadSupplierData() {
-    const supplierId = id as string;
-
-    try {
-      const supplier = await SupplierRepository.findById(supplierId);
-      setValue("name", supplier.name);
-      setValue("active", supplier.active);
-      setValue("city", supplier.city);
-      setValue("state", supplier.state);
-      setValue("supplierType", supplier.supplierType);
-      setValue("document", supplier.document);
-      setValue("cep", supplier.cep);
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Erro ao carregar fornecedor",
-      });
-      return;
-    }
+  function setSupplierFieldsIntoForm() {
+    if (!supplier) return;
+    setValue("name", supplier!.name);
+    setValue("active", supplier!.active);
+    setValue("city", supplier!.city);
+    setValue("state", supplier!.state);
+    setValue("document", supplier!.document);
+    setValue("cep", supplier!.cep);
+    setValue("supplierType", supplier!.supplierType);
   }
 
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
-    const supplier = schema.parse(formData) as Supplier;
+    const parsedSupplier = schema.parse(formData) as Supplier;
 
     setButtonActive(false);
 
     try {
-      const supplierId = id as string;
       if (crudOperation === CrudOperation.Delete) {
-        await SupplierRepository.delete(supplierId);
+        await SupplierRepository.delete(supplier!.id);
       } else if (crudOperation === CrudOperation.Create) {
-        await SupplierRepository.create(supplier);
+        await SupplierRepository.create(parsedSupplier);
       } else if (crudOperation === CrudOperation.Update) {
-        await SupplierRepository.update(supplierId, supplier);
+        await SupplierRepository.update(supplier!.id, parsedSupplier);
       } else {
         throw new Error("Operação não permitida");
       }
@@ -145,7 +133,7 @@ export default function SupplierModal({ visible, setVisible, crudOperation, id, 
 
       Swal.fire({
         icon: "error",
-        title: "Erro ao salvar fornecedor",
+        title: crudOperation === CrudOperation.Delete ? "Erro ao excluir" : "Erro ao salvar",
         html: err.message,
       });
 

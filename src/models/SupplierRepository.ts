@@ -1,5 +1,6 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { firestore } from "../context/FirebaseContext";
+import { FirebaseRepository } from "./FirebaseRepository";
 
 export enum SupplierType {
   Physical = "Física",
@@ -19,6 +20,8 @@ export class Supplier {
   cep: string = "";
 }
 
+export const SupplierRepository = new FirebaseRepository<Supplier>("suppliers");
+/*
 const suppliersCollection = collection(firestore, "suppliers");
 
 export class SupplierRepository {
@@ -62,3 +65,4 @@ export class SupplierRepository {
     return supplier;
   }
 }
+*/

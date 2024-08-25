@@ -1,14 +1,14 @@
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Table from "react-bootstrap/Table";
-import { CrudOperation } from "../../data/constants";
-import { Supplier } from "../../models/SupplierRepository";
 import activeImg from "../../assets/green_square.png";
 import inactiveImg from "../../assets/red_square.png";
+import { CrudOperation } from "../../data/constants";
+import { Supplier } from "../../models/SupplierRepository";
 
 export type SuppliersTableProps = {
   suppliers: Supplier[];
-  showModal: (crudOperation: CrudOperation, id?: string) => void;
+  showModal: (crudOperation: CrudOperation, supplier?: Supplier) => void;
 };
 
 export default function SuppliersTable({ suppliers, showModal }: SuppliersTableProps) {
@@ -17,7 +17,7 @@ export default function SuppliersTable({ suppliers, showModal }: SuppliersTableP
   }
 
   return (
-    <Table striped bordered hover size="sm">
+    <Table striped bordered hover size="sm" responsive>
       <thead>
         <tr>
           <th>Ativo</th>
@@ -26,6 +26,7 @@ export default function SuppliersTable({ suppliers, showModal }: SuppliersTableP
           <th>CPF/CNPJ</th>
           <th>Cidade</th>
           <th>Estado</th>
+          <th>CEP</th>
           <th>Ações</th>
         </tr>
       </thead>
@@ -40,11 +41,12 @@ export default function SuppliersTable({ suppliers, showModal }: SuppliersTableP
             <td>{supplier.document}</td>
             <td>{supplier.city}</td>
             <td>{supplier.state}</td>
+            <td>{supplier.cep}</td>
             <td>
               <ButtonGroup>
-                <Button variant="info" className="bi bi-info-square" title="Visualizar" onClick={() => showModal(CrudOperation.Read, supplier.id)} />
-                <Button variant="primary" className="bi bi-pencil-square" title="Editar" onClick={() => showModal(CrudOperation.Update, supplier.id)} />
-                <Button variant="danger" className="bi bi-trash" title="Excluir" onClick={() => showModal(CrudOperation.Delete, supplier.id)} />
+                <Button variant="info" className="bi bi-info-square" title="Visualizar" onClick={() => showModal(CrudOperation.Read, supplier)} />
+                <Button variant="warning" className="bi bi-pencil-square" title="Editar" onClick={() => showModal(CrudOperation.Update, supplier)} />
+                <Button variant="danger" className="bi bi-trash" title="Excluir" onClick={() => showModal(CrudOperation.Delete, supplier)} />
               </ButtonGroup>
             </td>
           </tr>

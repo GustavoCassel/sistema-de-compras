@@ -11,7 +11,7 @@ export default function Suppliers() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [crudOperation, setCrudOperation] = useState<CrudOperation>(CrudOperation.Create);
-  const [id, setId] = useState<string | undefined>();
+  const [supplier, setSupplier] = useState<Supplier | undefined>();
 
   useEffect(() => {
     updateSupplierTable();
@@ -24,23 +24,28 @@ export default function Suppliers() {
     });
   }
 
-  function showModal(crudOperation: CrudOperation, id?: string) {
+  function showModal(crudOperation: CrudOperation, supplier?: Supplier) {
     setModalVisible(true);
     setCrudOperation(crudOperation);
-    setId(id);
+    setSupplier(supplier);
   }
 
   return (
     <div>
-      <h2 className="text-center">Fornecedores</h2>
-
-      <Button variant="primary" className=" float-end" onClick={() => showModal(CrudOperation.Create)}>
-        <i className="bi bi-plus-square me-2" />
-        Cadastrar Fornecedor
-      </Button>
-
-      <SupplierModal visible={modalVisible} setVisible={setModalVisible} crudOperation={crudOperation} id={id} updateSupplierTable={updateSupplierTable} />
-
+      <div className="d-flex justify-content-between">
+        <h2>Fornecedores</h2>
+        <Button variant="primary" onClick={() => showModal(CrudOperation.Create)}>
+          <i className="bi bi-plus-square me-2" />
+          Cadastrar
+        </Button>
+      </div>
+      <SupplierModal
+        visible={modalVisible}
+        setVisible={setModalVisible}
+        crudOperation={crudOperation}
+        supplier={supplier}
+        updateSupplierTable={updateSupplierTable}
+      />
       {loading ? <Loading /> : <SuppliersTable suppliers={suppliers} showModal={showModal} />}
     </div>
   );

@@ -1,14 +1,18 @@
 import { signOut } from "firebase/auth";
+import { useContext } from "react";
+import { Badge } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { auth, isAdmin } from "../context/FirebaseContext";
-import { CONTACTS_ENDPOINT, HOME_ENDPOINT, SUPPLIERS_ENDPOINT } from "../data/constants";
-import "./Navbar.css";
-import { Badge } from "react-bootstrap";
+import { NavLink, Outlet } from "react-router-dom";
+import { FirebaseUserContext } from "../../App";
+import { auth, isAdmin } from "../../context/FirebaseContext";
+import { CONTACTS_ENDPOINT, HOME_ENDPOINT, SUPPLIERS_ENDPOINT } from "../../data/constants";
+import "./styles.css";
 
 export default function AppHeader() {
+  const user = useContext(FirebaseUserContext);
+
   function handleSignOut() {
     signOut(auth);
     window.location.reload();
@@ -43,13 +47,13 @@ export default function AppHeader() {
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
-          {auth.currentUser && (
+          {user && (
             <>
               <Navbar.Text>
-                Conectado como: <strong>{auth.currentUser.email}</strong>
+                Conectado como: <strong>{user.email}</strong>
               </Navbar.Text>
-              <Badge bg={isAdmin() ? "danger" : "success"} className="ms-2">
-                {isAdmin() ? "Admin" : "Usuário"}
+              <Badge bg={isAdmin(user) ? "danger" : "success"} className="ms-2">
+                {isAdmin(user) ? "Admin" : "Usuário"}
               </Badge>
               <Nav.Link as={NavLink} to={HOME_ENDPOINT} onClick={handleSignOut} className="justify-content-end">
                 <i className="bi bi-box-arrow-right me-2 ms-2" />
@@ -60,7 +64,9 @@ export default function AppHeader() {
         </Container>
       </Navbar>
 
-      <Outlet />
+      <Container className="mt-3">
+        <Outlet />
+      </Container>
     </>
   );
 }
