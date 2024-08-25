@@ -11,8 +11,12 @@ export const app = initializeApp(firebaseOptions);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 
-export function isAdmin(user: User) {
+export function isAdmin(user: User | null) {
   const admins: string[] = ["admin@react.com"];
+
+  if (!user) {
+    return false;
+  }
 
   return admins.includes(user.email!);
 }

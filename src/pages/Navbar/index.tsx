@@ -7,7 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { NavLink, Outlet } from "react-router-dom";
 import { FirebaseUserContext } from "../../App";
 import { auth, isAdmin } from "../../context/FirebaseContext";
-import { CONTACTS_ENDPOINT, HOME_ENDPOINT, SUPPLIERS_ENDPOINT } from "../../data/constants";
+import { CONTACTS_ENDPOINT, HOME_ENDPOINT, PRODUCTS_ENDPOINT, PURCHASE_REQUESTS_ENDPOINT, QUOTATIONS_ENDPOINT, SUPPLIERS_ENDPOINT } from "../../data/constants";
 import "./styles.css";
 
 export default function AppHeader() {
@@ -27,28 +27,9 @@ export default function AppHeader() {
             Sistema de Compras
           </Navbar.Brand>
           <Navbar.Toggle />
-          <Navbar.Collapse>
-            <Nav className="me-auto">
-              <Nav.Link as={NavLink} to={SUPPLIERS_ENDPOINT}>
-                <i className="bi bi-truck me-2" />
-                Fornecedores
-              </Nav.Link>
-              <Nav.Link as={NavLink} to={CONTACTS_ENDPOINT}>
-                <i className="bi bi-person me-2" />
-                Contatos
-              </Nav.Link>
-              <Nav.Link as={NavLink} to={"/produtos"}>
-                <i className="bi bi-box me-2" />
-                Produtos
-              </Nav.Link>
-              <Nav.Link as={NavLink} to={"/cotacoes"}>
-                <i className="bi bi-currency-dollar me-2" />
-                Cotações
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
+          {isAdmin(user) ? <AdminNavbar /> : <UserNavbar />}
           {user && (
-            <>
+            <Navbar>
               <Navbar.Text>
                 Conectado como: <strong>{user.email}</strong>
               </Navbar.Text>
@@ -59,7 +40,7 @@ export default function AppHeader() {
                 <i className="bi bi-box-arrow-right me-2 ms-2" />
                 Sair
               </Nav.Link>
-            </>
+            </Navbar>
           )}
         </Container>
       </Navbar>
@@ -68,5 +49,39 @@ export default function AppHeader() {
         <Outlet />
       </Container>
     </>
+  );
+}
+
+function UserNavbar() {
+  return (
+    <Nav className="me-auto">
+      <Nav.Link as={NavLink} to={PURCHASE_REQUESTS_ENDPOINT}>
+        <i className="bi bi-basket me-2" />
+        Solicitações de Compra
+      </Nav.Link>
+    </Nav>
+  );
+}
+
+function AdminNavbar() {
+  return (
+    <Nav className="me-auto">
+      <Nav.Link as={NavLink} to={SUPPLIERS_ENDPOINT}>
+        <i className="bi bi-truck me-2" />
+        Fornecedores
+      </Nav.Link>
+      <Nav.Link as={NavLink} to={CONTACTS_ENDPOINT}>
+        <i className="bi bi-person me-2" />
+        Contatos
+      </Nav.Link>
+      <Nav.Link as={NavLink} to={PRODUCTS_ENDPOINT}>
+        <i className="bi bi-box me-2" />
+        Produtos
+      </Nav.Link>
+      <Nav.Link as={NavLink} to={QUOTATIONS_ENDPOINT}>
+        <i className="bi bi-currency-dollar me-2" />
+        Cotações
+      </Nav.Link>
+    </Nav>
   );
 }
