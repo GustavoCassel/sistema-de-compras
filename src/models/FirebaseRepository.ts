@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firestore } from "../context/FirebaseContext";
 
 type TFirestoreEntity = { id?: string };
@@ -55,5 +55,20 @@ export class FirebaseRepository<T extends TFirestoreEntity> {
     item.id = docSnap.id;
 
     return item;
+  }
+
+  async findByField(fieldName: string, fieldValue: any): Promise<T[]> {
+    const q = query(this.collection, where(fieldName, "==", fieldValue));
+    const querySnapshot = await getDocs(q);
+    const items: T[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data() as T;
+      data.id = doc.id;
+
+      items.push(data);
+    });
+
+    return items;
   }
 }
