@@ -1,5 +1,5 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
-import { getAuth, User } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { NavigateFunction } from "react-router-dom";
 import { HOME_ENDPOINT, LOGIN_ENDPOINT } from "../data/constants";
