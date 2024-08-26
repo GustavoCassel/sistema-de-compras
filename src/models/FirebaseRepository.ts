@@ -85,4 +85,18 @@ export abstract class FirebaseRepository<T extends TFirestoreEntity> {
 
     return items;
   }
+
+  async getUniqueByField(fieldName: string, fieldValue: any): Promise<T | null> {
+    const items = await this.getByField(fieldName, fieldValue);
+
+    if (items.length > 1) {
+      throw new Error(`Mais de um item com o mesmo ${fieldName}.`);
+    }
+
+    if (!items) {
+      return null;
+    }
+
+    return items[0];
+  }
 }

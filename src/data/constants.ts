@@ -2,6 +2,7 @@
 export const HOME_ENDPOINT: string = "/";
 export const LOGIN_ENDPOINT: string = "/login-register";
 export const NOT_FOUND_ENDPOINT: string = "*";
+export const USERS_ENDPOINT: string = "/users";
 export const SUPPLIERS_ENDPOINT: string = "/suppliers";
 export const CONTACTS_ENDPOINT: string = "/contacts";
 export const PRODUCTS_ENDPOINT: string = "/products";

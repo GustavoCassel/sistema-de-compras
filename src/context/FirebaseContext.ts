@@ -11,21 +11,6 @@ export const app = initializeApp(firebaseOptions);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 
-export function isAdmin(user: User | null) {
-  if (!user || !user.email) {
-    return false;
-  }
-
-  const adminsRaw = process.env.REACT_APP_ADMINS;
-  if (!adminsRaw) {
-    throw new Error("Variável de ambiente REACT_APP_ADMINS não definida");
-  }
-
-  const admins: string[] = JSON.parse(adminsRaw);
-
-  return admins.includes(user.email);
-}
-
 export async function navigateByLoginState(navigate: NavigateFunction) {
   await auth.authStateReady();
 

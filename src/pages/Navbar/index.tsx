@@ -6,8 +6,16 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, Outlet } from "react-router-dom";
 import { FirebaseUserContext } from "../../App";
-import { auth, isAdmin } from "../../context/FirebaseContext";
-import { CONTACTS_ENDPOINT, HOME_ENDPOINT, PRODUCTS_ENDPOINT, PURCHASE_REQUESTS_ENDPOINT, QUOTATIONS_ENDPOINT, SUPPLIERS_ENDPOINT } from "../../data/constants";
+import { auth } from "../../context/FirebaseContext";
+import {
+  CONTACTS_ENDPOINT,
+  HOME_ENDPOINT,
+  PRODUCTS_ENDPOINT,
+  PURCHASE_REQUESTS_ENDPOINT,
+  QUOTATIONS_ENDPOINT,
+  SUPPLIERS_ENDPOINT,
+  USERS_ENDPOINT,
+} from "../../data/constants";
 import "./styles.css";
 
 export default function AppHeader() {
@@ -29,13 +37,13 @@ export default function AppHeader() {
           <Navbar.Toggle />
           {user && (
             <>
-              {isAdmin(user) ? <AdminNavbar /> : <UserNavbar />}
+              {user.isAdmin ? <AdminNavbar /> : <UserNavbar />}
               <Navbar>
                 <Navbar.Text>
                   Conectado como: <strong>{user.email}</strong>
                 </Navbar.Text>
-                <Badge bg={isAdmin(user) ? "danger" : "success"} className="ms-2">
-                  {isAdmin(user) ? "Admin" : "Usuário"}
+                <Badge bg={user.isAdmin ? "danger" : "success"} className="ms-2">
+                  {user.isAdmin ? "Admin" : "Usuário"}
                 </Badge>
                 <Nav.Link as={NavLink} to={HOME_ENDPOINT} onClick={handleSignOut} className="justify-content-end">
                   <i className="bi bi-box-arrow-right me-2 ms-2" />
@@ -83,6 +91,10 @@ function AdminNavbar() {
       <Nav.Link as={NavLink} to={QUOTATIONS_ENDPOINT}>
         <i className="bi bi-currency-dollar me-2" />
         Cotações
+      </Nav.Link>
+      <Nav.Link as={NavLink} to={USERS_ENDPOINT}>
+        <i className="bi bi-people me-2" />
+        Usuários
       </Nav.Link>
     </Nav>
   );
