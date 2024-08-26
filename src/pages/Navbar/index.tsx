@@ -27,20 +27,22 @@ export default function AppHeader() {
             Sistema de Compras
           </Navbar.Brand>
           <Navbar.Toggle />
-          {isAdmin(user) ? <AdminNavbar /> : <UserNavbar />}
           {user && (
-            <Navbar>
-              <Navbar.Text>
-                Conectado como: <strong>{user.email}</strong>
-              </Navbar.Text>
-              <Badge bg={isAdmin(user) ? "danger" : "success"} className="ms-2">
-                {isAdmin(user) ? "Admin" : "Usuário"}
-              </Badge>
-              <Nav.Link as={NavLink} to={HOME_ENDPOINT} onClick={handleSignOut} className="justify-content-end">
-                <i className="bi bi-box-arrow-right me-2 ms-2" />
-                Sair
-              </Nav.Link>
-            </Navbar>
+            <>
+              {isAdmin(user) ? <AdminNavbar /> : <UserNavbar />}
+              <Navbar>
+                <Navbar.Text>
+                  Conectado como: <strong>{user.email}</strong>
+                </Navbar.Text>
+                <Badge bg={isAdmin(user) ? "danger" : "success"} className="ms-2">
+                  {isAdmin(user) ? "Admin" : "Usuário"}
+                </Badge>
+                <Nav.Link as={NavLink} to={HOME_ENDPOINT} onClick={handleSignOut} className="justify-content-end">
+                  <i className="bi bi-box-arrow-right me-2 ms-2" />
+                  Sair
+                </Nav.Link>
+              </Navbar>
+            </>
           )}
         </Container>
       </Navbar>

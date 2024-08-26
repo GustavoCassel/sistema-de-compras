@@ -18,4 +18,10 @@ export class Supplier {
   cep: string = "";
 }
 
-export const SupplierRepository = new FirebaseRepository<Supplier>("suppliers");
+class SupplierRepository extends FirebaseRepository<Supplier> {
+  constructor() {
+    super("suppliers");
+  }
+}
+
+export const supplierRepository = new SupplierRepository();

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Loading from "../../components/Loading";
 import { CrudOperation } from "../../data/constants";
-import { Supplier, SupplierRepository } from "../../models/SupplierRepository";
+import { Supplier, supplierRepository } from "../../models/SupplierRepository";
 import SupplierModal from "./SupplierModal";
 import SuppliersTable from "./SuppliersTable";
 
@@ -14,11 +14,11 @@ export default function Suppliers() {
   const [supplier, setSupplier] = useState<Supplier | undefined>();
 
   useEffect(() => {
-    updateSupplierTable();
+    updateTable();
   }, []);
 
-  function updateSupplierTable() {
-    SupplierRepository.getAll().then((suppliers) => {
+  function updateTable() {
+    supplierRepository.getAll().then((suppliers) => {
       setSuppliers(suppliers);
       setLoading(false);
     });
@@ -31,7 +31,7 @@ export default function Suppliers() {
   }
 
   return (
-    <div>
+    <>
       <div className="d-flex justify-content-between">
         <h2>Fornecedores</h2>
         <Button variant="primary" onClick={() => showModal(CrudOperation.Create)}>
@@ -39,14 +39,8 @@ export default function Suppliers() {
           Cadastrar
         </Button>
       </div>
-      <SupplierModal
-        visible={modalVisible}
-        setVisible={setModalVisible}
-        crudOperation={crudOperation}
-        supplier={supplier}
-        updateSupplierTable={updateSupplierTable}
-      />
+      <SupplierModal visible={modalVisible} setVisible={setModalVisible} crudOperation={crudOperation} supplier={supplier} updateSupplierTable={updateTable} />
       {loading ? <Loading /> : <SuppliersTable suppliers={suppliers} showModal={showModal} />}
-    </div>
+    </>
   );
 }

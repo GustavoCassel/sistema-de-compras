@@ -1,5 +1,5 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
-import { getAuth, updateProfile, User } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { NavigateFunction } from "react-router-dom";
 import { HOME_ENDPOINT, LOGIN_ENDPOINT } from "../data/constants";
@@ -12,13 +12,18 @@ export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 
 export function isAdmin(user: User | null) {
-  const admins: string[] = ["admin@react.com"];
-
-  if (!user) {
+  if (!user || !user.email) {
     return false;
   }
 
-  return admins.includes(user.email!);
+  const adminsRaw = process.env.REACT_APP_ADMINS;
+  if (!adminsRaw) {
+    throw new Error("Variável de ambiente REACT_APP_ADMINS não definida");
+  }
+
+  const admins: string[] = JSON.parse(adminsRaw);
+
+  return admins.includes(user.email);
 }
 
 export async function navigateByLoginState(navigate: NavigateFunction) {

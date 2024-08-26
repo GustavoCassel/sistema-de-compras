@@ -7,45 +7,46 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import ReactInputMask from "react-input-mask";
 import Swal from "sweetalert2";
 import { z } from "zod";
-import { CEP_MASK, CNPJ_MASK, CPF_MASK, CrudOperation } from "../../data/constants";
-import { Supplier, SUPPLIER_TYPES, supplierRepository, SupplierType } from "../../models/SupplierRepository";
+import { CrudOperation, PHONE_MASK } from "../../data/constants";
+import { Contact, contactRepository } from "../../models/ContactRepository";
 import { Toast } from "../../utils/Alerts";
-import SupplierContactsTable from "./SupplierContactsTable";
+import { Supplier, supplierRepository } from "../../models/SupplierRepository";
 
-type SupplierModalProps = {
+type ContactModalProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   crudOperation: CrudOperation;
-  supplier?: Supplier;
-  updateSupplierTable: () => void;
+  contact?: Contact;
+  updateContactsTable: () => void;
 };
 
-// TODO: configure validation schema and the input mask for the document field, considering the supplierType
+const SUPPLIER_ID_EMPTY = "Selecione um fornecedor";
+
 const schema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   active: z.boolean(),
-  city: z.string().min(1, "Cidade é obrigatória"),
-  state: z.string().regex(/^[A-Z]{2}$/, "Somente sigla do estado"),
-  document: z.string(),
-  cep: z.string().regex(/^\d{5}-\d{3}$/, "CEP inválido"),
-  supplierType: z.nativeEnum(SupplierType, { message: "Tipo de fornecedor inválido" }),
+  email: z.string().email({ message: "Email inválido" }),
+  phone: z.string().min(15, "Telefone é obrigatório"),
+  supplierId: z
+    .string()
+    .min(1, { message: "Fornecedor é obrigatório" })
+    .refine((value) => value !== SUPPLIER_ID_EMPTY, { message: "Fornecedor é obrigatório" }),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export default function SupplierModal({ visible, setVisible, crudOperation, supplier, updateSupplierTable }: SupplierModalProps) {
+export default function ContactModal({ visible, setVisible, crudOperation, contact, updateContactsTable }: ContactModalProps) {
   const {
     register,
     handleSubmit,
     reset,
     control,
     setValue,
-    watch,
     trigger,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: new Supplier(),
+    defaultValues: new Contact(),
   });
 
   const [buttonActive, setButtonActive] = useState(true);
@@ -56,43 +57,47 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
   const [headerText, setHeaderText] = useState("");
   const [formColor, setFormColor] = useState("");
   const [formDisabled, setFormDisabled] = useState(false);
-
-  const watchSupplierType = watch("supplierType");
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
   useEffect(() => {
-    setSupplierFieldsIntoForm();
+    if (!visible) {
+      return;
+    }
+    setContactFieldsIntoForm();
+
+    updateSuppliers();
 
     updateFormByCrudOperation();
-  }, [crudOperation, supplier, visible]);
+  }, [crudOperation, contact, visible]);
 
   function updateFormByCrudOperation() {
     setFormDisabled(false);
     setButtonVisible(true);
     if (crudOperation === CrudOperation.Create) {
-      reset(new Supplier(), { keepValues: false });
+      reset(new Contact(), { keepValues: false });
       setSubmittingButtonText("Cadastrando...");
       setButtonText("Cadastrar");
-      setHeaderText("Cadastrar Fornecedor");
+      setHeaderText("Cadastrar Contato");
       setHeaderIcon("bi bi-plus-square");
       setFormColor("primary");
       setValue("active", true);
     } else if (crudOperation === CrudOperation.Update) {
       setSubmittingButtonText("Atualizando...");
       setButtonText("Atualizar");
-      setHeaderText("Atualizar Fornecedor");
+      setHeaderText("Atualizar Contato");
       setHeaderIcon("bi bi-pencil-square");
       setFormColor("warning");
     } else if (crudOperation === CrudOperation.Delete) {
       setSubmittingButtonText("Excluindo...");
       setFormDisabled(true);
       setButtonText("Confirma exclusão?");
-      setHeaderText("Excluir Fornecedor");
+      setHeaderText("Excluir Contato");
       setHeaderIcon("bi bi-trash");
       setFormColor("danger");
     } else if (crudOperation === CrudOperation.Read) {
       setFormDisabled(true);
       setButtonVisible(false);
-      setHeaderText("Detalhes do Fornecedor");
+      setHeaderText("Detalhes do Contato");
       setHeaderIcon("bi bi-info-square");
       setFormColor("info");
     } else {
@@ -104,26 +109,36 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
     setVisible(false);
   }
 
-  function setSupplierFieldsIntoForm() {
-    if (!supplier) {
+  function setContactFieldsIntoForm() {
+    if (!contact) {
       return;
     }
-    reset(supplier, { keepValues: false });
+    reset(contact, { keepValues: false });
     trigger();
   }
 
+  async function updateSuppliers() {
+    if (crudOperation === CrudOperation.Delete || crudOperation === CrudOperation.Read) {
+      return;
+    }
+
+    const suppliers = await supplierRepository.getAll();
+
+    setSuppliers(suppliers);
+  }
+
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
-    const parsedSupplier = schema.parse(formData) as Supplier;
+    const parsedContact = schema.parse(formData) as Contact;
 
     setButtonActive(false);
 
     try {
       if (crudOperation === CrudOperation.Delete) {
-        await supplierRepository.delete(supplier!.id);
+        await contactRepository.delete(contact!.id);
       } else if (crudOperation === CrudOperation.Create) {
-        await supplierRepository.create(parsedSupplier);
+        await contactRepository.create(parsedContact);
       } else if (crudOperation === CrudOperation.Update) {
-        await supplierRepository.update(supplier!.id, parsedSupplier);
+        await contactRepository.update(contact!.id, parsedContact);
       } else {
         throw new Error("Operação não permitida");
       }
@@ -146,7 +161,7 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
       title: crudOperation === CrudOperation.Delete ? "Excluído com sucesso!" : "Salvo com sucesso!",
     });
 
-    updateSupplierTable();
+    updateContactsTable();
 
     handleClose();
   };
@@ -178,73 +193,48 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
               <Form.Control.Feedback type="invalid">{errors.active?.message}</Form.Control.Feedback>
             </Container>
 
-            <FloatingLabel label={watchSupplierType === SupplierType.Legal ? "Razão Social" : "Nome"} className="mb-3">
+            <FloatingLabel label="Nome" className="mb-3">
               <Form.Control type="text" placeholder="" isInvalid={!!errors.name} {...register("name")} />
               <Form.Control.Feedback type="invalid">{errors.name?.message}</Form.Control.Feedback>
             </FloatingLabel>
 
-            <FloatingLabel label="Cidade" className="mb-3">
-              <Form.Control type="text" placeholder="" isInvalid={!!errors.city} {...register("city")} />
-              <Form.Control.Feedback type="invalid">{errors.city?.message}</Form.Control.Feedback>
+            <FloatingLabel controlId="floatingInput" label="Email" className="mb-3">
+              <Form.Control type="email" placeholder="" isInvalid={!!errors.email} {...register("email")} />
+              <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
             </FloatingLabel>
 
-            <FloatingLabel label="Estado" className="mb-3">
+            <FloatingLabel label="Telefone" className="mb-3">
               <Form.Control
                 as={ReactInputMask}
                 type="text"
                 placeholder=""
-                mask={"aa"}
+                mask={PHONE_MASK}
                 maskChar={null}
-                isInvalid={!!errors.state}
-                {...register("state")}
-                onChange={(e) => setValue("state", e.target.value.toUpperCase(), { shouldValidate: true })}
+                isInvalid={!!errors.phone}
+                {...register("phone")}
               />
-              <Form.Control.Feedback type="invalid">{errors.state?.message}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">{errors.phone?.message}</Form.Control.Feedback>
             </FloatingLabel>
 
-            <FloatingLabel label="Tipo Pessoa" className="mb-3">
+            <FloatingLabel label="Fornecedor" className="mb-3">
               <Controller
-                {...register("supplierType")}
+                {...register("supplierId")}
                 control={control}
                 render={({ field }) => (
-                  <>
-                    <Form.Select {...field}>
-                      {SUPPLIER_TYPES.map((type) => (
-                        <option key={type} value={type}>
-                          {type}
-                        </option>
-                      ))}
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">{errors.supplierType?.message}</Form.Control.Feedback>
-                  </>
+                  <Form.Select {...field} isInvalid={!!errors.supplierId} defaultValue={SUPPLIER_ID_EMPTY}>
+                    <option key={SUPPLIER_ID_EMPTY} value={SUPPLIER_ID_EMPTY}>
+                      {SUPPLIER_ID_EMPTY}
+                    </option>
+                    {suppliers.map((supplier) => (
+                      <option key={supplier.id} value={supplier.id}>
+                        {supplier.name}
+                      </option>
+                    ))}
+                  </Form.Select>
                 )}
               />
+              <Form.Control.Feedback type="invalid">{errors.supplierId?.message}</Form.Control.Feedback>
             </FloatingLabel>
-
-            <FloatingLabel label={watchSupplierType === SupplierType.Legal ? "CNPJ" : "CPF"} className="mb-3">
-              <Form.Control
-                as={ReactInputMask}
-                type="text"
-                placeholder=""
-                mask={watchSupplierType === SupplierType.Legal ? CNPJ_MASK : CPF_MASK}
-                maskChar={null}
-                isInvalid={!!errors.document}
-                {...register("document")}
-              />
-              <Form.Control.Feedback type="invalid">{errors.document?.message}</Form.Control.Feedback>
-            </FloatingLabel>
-
-            <FloatingLabel label="CEP" className="mb-3">
-              <Form.Control as={ReactInputMask} type="text" placeholder="" mask={CEP_MASK} maskChar={null} isInvalid={!!errors.cep} {...register("cep")} />
-              <Form.Control.Feedback type="invalid">{errors.cep?.message}</Form.Control.Feedback>
-            </FloatingLabel>
-
-            {supplier && (
-              <>
-                <Form.Text>Informações de contato</Form.Text>
-                <SupplierContactsTable supplier={supplier} />
-              </>
-            )}
           </fieldset>
         </Form>
       </Modal.Body>

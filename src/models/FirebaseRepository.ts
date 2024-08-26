@@ -3,26 +3,13 @@ import { firestore } from "../context/FirebaseContext";
 
 type TFirestoreEntity = { id?: string };
 
-export class FirebaseRepository<T extends TFirestoreEntity> {
+export abstract class FirebaseRepository<T extends TFirestoreEntity> {
   constructor(private collectionName: string) {}
 
   private collection = collection(firestore, this.collectionName);
 
   async create(item: T): Promise<void> {
     await addDoc(this.collection, Object.assign({}, item));
-  }
-
-  async getAll(): Promise<T[]> {
-    const querySnapshot = await getDocs(this.collection);
-    const items: T[] = [];
-
-    querySnapshot.forEach((doc) => {
-      const item = doc.data() as T;
-      item.id = doc.id;
-      items.push(item);
-    });
-
-    return items;
   }
 
   async update(id: string, item: Partial<T>): Promise<void> {
@@ -43,12 +30,25 @@ export class FirebaseRepository<T extends TFirestoreEntity> {
     await deleteDoc(docRef);
   }
 
-  async findById(id: string): Promise<T> {
+  async getAll(): Promise<T[]> {
+    const querySnapshot = await getDocs(this.collection);
+    const items: T[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const item = doc.data() as T;
+      item.id = doc.id;
+      items.push(item);
+    });
+
+    return items;
+  }
+
+  async getById(id: string): Promise<T | null> {
     const docRef = doc(this.collection, id);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
-      throw new Error("Item não encontrado");
+      return null;
     }
 
     const item = docSnap.data() as T;
@@ -57,7 +57,21 @@ export class FirebaseRepository<T extends TFirestoreEntity> {
     return item;
   }
 
-  async findByField(fieldName: string, fieldValue: any): Promise<T[]> {
+  async getByIds(ids: string[]): Promise<T[]> {
+    const items: T[] = [];
+
+    for (const id of ids) {
+      const item = await this.getById(id);
+
+      if (item) {
+        items.push(item);
+      }
+    }
+
+    return items;
+  }
+
+  async getByField(fieldName: string, fieldValue: any): Promise<T[]> {
     const q = query(this.collection, where(fieldName, "==", fieldValue));
     const querySnapshot = await getDocs(q);
     const items: T[] = [];

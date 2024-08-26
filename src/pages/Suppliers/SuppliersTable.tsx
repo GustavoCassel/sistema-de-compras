@@ -20,7 +20,7 @@ export default function SuppliersTable({ suppliers, showModal }: SuppliersTableP
     <Table striped bordered hover size="sm" responsive>
       <thead>
         <tr>
-          <th>Ativo</th>
+          <th>Status</th>
           <th>Nome</th>
           <th>Tipo Pessoa</th>
           <th>CPF/CNPJ</th>
@@ -34,7 +34,8 @@ export default function SuppliersTable({ suppliers, showModal }: SuppliersTableP
         {suppliers.map((supplier) => (
           <tr key={supplier.id}>
             <td>
-              <img src={supplier.active ? activeImg : inactiveImg} alt={supplier.active ? "Ativo" : "Inativo"} width="20" height="20" />
+              <img src={supplier.active ? activeImg : inactiveImg} alt={supplier.active ? "Ativo" : "Inativo"} width="20" height="20" className="me-2" />
+              {supplier.active ? "Ativo" : "Inativo"}
             </td>
             <td>{supplier.name}</td>
             <td>{supplier.supplierType}</td>
