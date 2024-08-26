@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Table from "react-bootstrap/Table";
 import activeImg from "../../assets/green_square.png";
 import inactiveImg from "../../assets/red_square.png";
-import Loading from "../../components/Loading";
-import { Contact, contactRepository } from "../../models/ContactRepository";
-import { Supplier } from "../../models/SupplierRepository";
 import { CrudOperation } from "../../data/constants";
+import { Contact } from "../../models/ContactRepository";
 
 export type ContactsTableProps = {
   contacts: Contact[];
