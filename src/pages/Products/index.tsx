@@ -20,10 +20,10 @@ export default function Products() {
   }, []);
 
   async function updateTable() {
+    setLoading(true);
     try {
       const products = await productRepository.getAll();
 
-      setLoading(false);
       setProducts(products);
     } catch (error) {
       const err = error as Error;
@@ -32,6 +32,8 @@ export default function Products() {
         title: "Erro ao carregar contatos",
         html: err.message,
       });
+    } finally {
+      setLoading(false);
     }
   }
 

@@ -7,6 +7,7 @@ import Loading from "../../components/Loading";
 import { FirebaseUser, firebaseUserRepository } from "../../models/FirebaseUserRepository";
 import { Toast } from "../../utils/Alerts";
 import { FirebaseUserContext } from "../../App";
+import Swal from "sweetalert2";
 
 export default function Users() {
   const loggedFirebaseUser = useContext(FirebaseUserContext);
@@ -17,11 +18,22 @@ export default function Users() {
     loadFirebaseUsers();
   }, []);
 
-  function loadFirebaseUsers() {
-    firebaseUserRepository.getAll().then((users) => {
+  async function loadFirebaseUsers() {
+    setLoading(true);
+    try {
+      const users = await firebaseUserRepository.getAll();
+
       setUsers(users);
+    } catch (error) {
+      const err = error as Error;
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao carregar contatos",
+        html: err.message,
+      });
+    } finally {
       setLoading(false);
-    });
+    }
   }
 
   function toggleAdmin(user: FirebaseUser) {

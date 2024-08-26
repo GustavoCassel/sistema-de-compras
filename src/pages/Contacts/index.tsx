@@ -19,12 +19,12 @@ export default function Contacts() {
   }, []);
 
   async function updateTable() {
+    setLoading(true);
     try {
       const contacts = await contactRepository.getAll();
 
       await contactRepository.fullFillSuppliers(contacts);
 
-      setLoading(false);
       setContacts(contacts);
     } catch (error) {
       const err = error as Error;
@@ -33,6 +33,8 @@ export default function Contacts() {
         title: "Erro ao carregar contatos",
         html: err.message,
       });
+    } finally {
+      setLoading(false);
     }
   }
 

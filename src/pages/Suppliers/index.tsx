@@ -5,6 +5,7 @@ import { CrudOperation } from "../../data/constants";
 import { Supplier, supplierRepository } from "../../models/SupplierRepository";
 import SupplierModal from "./SupplierModal";
 import SuppliersTable from "./SuppliersTable";
+import Swal from "sweetalert2";
 
 export default function Suppliers() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -17,11 +18,22 @@ export default function Suppliers() {
     updateTable();
   }, []);
 
-  function updateTable() {
-    supplierRepository.getAll().then((suppliers) => {
+  async function updateTable() {
+    setLoading(true);
+    try {
+      const suppliers = await supplierRepository.getAll();
+
       setSuppliers(suppliers);
+    } catch (error) {
+      const err = error as Error;
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao carregar contatos",
+        html: err.message,
+      });
+    } finally {
       setLoading(false);
-    });
+    }
   }
 
   function showModal(crudOperation: CrudOperation, supplier?: Supplier) {
