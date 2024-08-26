@@ -21,6 +21,7 @@ export default function Home() {
       <h3>Problemas conhecidos</h3>
 
       <h6>As consultas sempre retornam todos os registros, oque pode escalar mal em um ambiente de produção</h6>
+      <h6>Por ex: ao excluir um fornecedor, teria q excluir todos os contatos relacionados. Porque senão vai ficar inconsistente</h6>
     </>
   );
 }
