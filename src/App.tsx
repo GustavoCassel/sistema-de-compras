@@ -36,7 +36,7 @@ export default function App() {
   }, []);
 
   async function updateFirebaseUserContext(user: User | null) {
-    if (!user) {
+    if (!user || !user.email) {
       setUser(null);
       return;
     }
