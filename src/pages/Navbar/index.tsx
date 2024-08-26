@@ -6,6 +6,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, Outlet } from "react-router-dom";
 import { FirebaseUserContext } from "../../App";
+import Loading from "../../components/Loading";
 import { auth } from "../../context/FirebaseContext";
 import {
   CONTACTS_ENDPOINT,
@@ -35,7 +36,9 @@ export default function AppHeader() {
             Sistema de Compras
           </Navbar.Brand>
           <Navbar.Toggle />
-          {user && (
+          {!user ? (
+            <Loading />
+          ) : (
             <>
               {user.isAdmin ? <AdminNavbar /> : <UserNavbar />}
               <Navbar>
