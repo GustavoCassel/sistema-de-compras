@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table";
 import activeImg from "../../assets/green_square.png";
 import inactiveImg from "../../assets/red_square.png";
 import Loading from "../../components/Loading";
-import { Contact, contactRepository, SUPPLIER_ID_FIELD_NAME } from "../../models/ContactRepository";
+import { Contact, contactRepository } from "../../models/ContactRepository";
 import { Supplier } from "../../models/SupplierRepository";
 
 export type SupplierContactsTableProps = {
@@ -15,7 +15,7 @@ export default function SupplierContactsTable({ supplier }: SupplierContactsTabl
   const [loading, setLoading] = useState(true);
 
   async function loadContacts() {
-    const contacts = await contactRepository.getByField(SUPPLIER_ID_FIELD_NAME, supplier.id);
+    const contacts = await contactRepository.getByField("supplierId", supplier.id);
     setContacts(contacts);
     setLoading(false);
   }

@@ -71,8 +71,8 @@ export abstract class FirebaseRepository<T extends TFirestoreEntity> {
     return items;
   }
 
-  async getByField(fieldName: string, fieldValue: any): Promise<T[]> {
-    const q = query(this.collection, where(fieldName, "==", fieldValue));
+  async getByField<K extends keyof T>(fieldName: K, fieldValue: T[K]): Promise<T[]> {
+    const q = query(this.collection, where(fieldName as string, "==", fieldValue));
     const querySnapshot = await getDocs(q);
     const items: T[] = [];
 
@@ -86,11 +86,11 @@ export abstract class FirebaseRepository<T extends TFirestoreEntity> {
     return items;
   }
 
-  async getUniqueByField(fieldName: string, fieldValue: any): Promise<T | null> {
+  async getUniqueByField<K extends keyof T>(fieldName: K, fieldValue: T[K]): Promise<T | null> {
     const items = await this.getByField(fieldName, fieldValue);
 
     if (items.length > 1) {
-      throw new Error(`Mais de um item com o mesmo ${fieldName}.`);
+      throw new Error(`Mais de um item com o mesmo ${fieldName as string}.`);
     }
 
     if (!items) {

@@ -11,20 +11,17 @@ export class Contact {
   supplier: Supplier | undefined;
 }
 
-export const SUPPLIER_ID_FIELD_NAME = "supplierId";
-export const ACTIVE_FIELD_NAME = "active";
-
 class ContactRepository extends FirebaseRepository<Contact> {
   constructor() {
     super("contacts");
   }
 
   async findActiveContacts(): Promise<Contact[]> {
-    return this.getByField(ACTIVE_FIELD_NAME, true);
+    return this.getByField("active", true);
   }
 
   async findBySupplier(supplierId: string): Promise<Contact[]> {
-    return this.getByField(SUPPLIER_ID_FIELD_NAME, supplierId);
+    return this.getByField("supplierId", supplierId);
   }
 
   async fullFillSupplier(contact: Contact): Promise<void> {
