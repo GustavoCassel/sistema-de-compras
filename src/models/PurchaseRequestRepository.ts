@@ -12,12 +12,13 @@ export const NUMBER_OF_QUOTES_REQUIRED = 3;
 export class PurchaseRequest {
   id: string = "";
   requestDate: Date = new Date();
-  requesterUid: string = "";
-  productsId: string = "";
+  requesterId: string = "";
+  productId: string = "";
+  quantity: number = 0;
   quotationIds: string[] = [];
   status: PurchaseRequestStatus = getPurchaseRequestStatus(this);
   approvalDate?: Date = undefined;
-  remarks?: string = undefined;
+  observations?: string = undefined;
 }
 
 function getPurchaseRequestStatus(purchaseRequest: PurchaseRequest): PurchaseRequestStatus {
