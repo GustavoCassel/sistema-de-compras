@@ -39,7 +39,7 @@ export default function ContactsTable({ contacts, showModal }: ContactsTableProp
               {contact.active ? "Ativo" : "Inativo"}
             </td>
             <td>{contact.name}</td>
-            <td>{"dps vai ter o fornecedor aqui"}</td>
+            <td>{contact.supplier?.name || "Sem fornecedor"}</td>
             <td>{contact.phone}</td>
             <td>{contact.email}</td>
             <td>

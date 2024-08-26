@@ -5,6 +5,7 @@ import Loading from "../../components/Loading";
 import ContactsTable from "./ContactsTable";
 import { Button } from "react-bootstrap";
 import ContactModal from "./ContactModal";
+import Swal from "sweetalert2";
 
 export default function Contacts() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -17,11 +18,22 @@ export default function Contacts() {
     updateTable();
   }, []);
 
-  function updateTable() {
-    contactRepository.getAll().then((contacts) => {
-      setContacts(contacts);
+  async function updateTable() {
+    try {
+      const contacts = await contactRepository.getAll();
+
+      await contactRepository.fullFillSuppliers(contacts);
+
       setLoading(false);
-    });
+      setContacts(contacts);
+    } catch (error) {
+      const err = error as Error;
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao carregar contatos",
+        html: err.message,
+      });
+    }
   }
 
   function showModal(crudOperation: CrudOperation, contact?: Contact) {

@@ -10,11 +10,11 @@ export default function Home() {
 
       <h6>Autenticação com e-mail e senha</h6>
       <h6>Cadastro de fornecedores</h6>
+      <h6>Cadastro de contatos</h6>
       <h6>Acesso de administrador e usuário</h6>
 
       <h3>Funcionalidades a serem implementadas</h3>
 
-      <h6>Cadastro de contatos</h6>
       <h6>Cadastro de produtos</h6>
       <h6>Cadastro de cotações</h6>
 
