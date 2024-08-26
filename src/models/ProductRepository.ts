@@ -1,4 +1,4 @@
-import { FirebaseRepository } from "./FirebaseRepository";
+import { FirebaseRepository } from "../context/FirebaseRepository";
 
 export enum MeasurementUnit {
   Unit = "UN (Unidade)",

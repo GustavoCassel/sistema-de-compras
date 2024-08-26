@@ -1,4 +1,4 @@
-import { FirebaseRepository } from "./FirebaseRepository";
+import { FirebaseRepository } from "../context/FirebaseRepository";
 import { Supplier, supplierRepository } from "./SupplierRepository";
 
 export class Contact {
