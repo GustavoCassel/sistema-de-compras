@@ -5,7 +5,7 @@ export class Quotation {
   supplierId: string = "";
   quotationDate: Date = new Date();
   validityDate: Date = new Date();
-  totalAmount: number = 0;
+  price: number = 0;
   status: "Pending" | "Accepted" | "Rejected" = "Pending";
   observations?: string = "";
 }
