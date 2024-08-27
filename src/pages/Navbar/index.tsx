@@ -67,7 +67,7 @@ function UserNavbar() {
     <Nav className="me-auto">
       <Nav.Link as={NavLink} to={PURCHASE_REQUESTS_ENDPOINT}>
         <i className="bi bi-basket me-2" />
-        Solicitações de Compra
+        Requisições de Compra
       </Nav.Link>
     </Nav>
   );
