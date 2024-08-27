@@ -7,7 +7,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import ReactInputMask from "react-input-mask";
 import Swal from "sweetalert2";
 import { z } from "zod";
-import { CEP_MASK, CNPJ_MASK, CPF_MASK, CrudOperation } from "../../data/constants";
+import { CEP_MASK, CEP_REGEX, CNPJ_MASK, CPF_MASK, CrudOperation } from "../../data/constants";
 import { Supplier, SUPPLIER_TYPES, supplierRepository, SupplierType } from "../../models/SupplierRepository";
 import { Toast } from "../../utils/Alerts";
 import SupplierContactsTable from "./SupplierContactsTable";
@@ -27,7 +27,7 @@ const schema = z.object({
   city: z.string().min(1, "Cidade é obrigatória"),
   state: z.string().regex(/^[A-Z]{2}$/, "Somente sigla do estado"),
   document: z.string(),
-  cep: z.string().regex(/^\d{5}-\d{3}$/, "CEP inválido"),
+  cep: z.string().regex(CEP_REGEX, "CEP inválido"),
   supplierType: z.nativeEnum(SupplierType, { message: "Tipo de fornecedor inválido" }),
 });
 
