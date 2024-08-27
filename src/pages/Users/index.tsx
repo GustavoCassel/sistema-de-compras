@@ -141,24 +141,24 @@ export default function Users() {
                   </Badge>
                 </td>
                 <td>
-                  <ButtonGroup>
-                    <Button
-                      variant={user.isAdmin ? "success" : "danger"}
-                      className={user.isAdmin ? "bi bi-person-dash" : "bi bi-person-check"}
-                      title={user.isAdmin ? "Revogar Admin" : "Tornar Admin"}
-                      onClick={() => toggleAdmin(user)}
-                    >
-                      {user.isAdmin ? "Revogar Admin" : "Tornar Admin"}
-                    </Button>
-                    <Button
-                      variant={user.blocked ? "success" : "danger"}
-                      className={user.blocked ? "bi bi-person-check" : "bi bi-person-dash"}
-                      title={user.blocked ? "Desbloquear" : "Bloquear"}
-                      onClick={() => toggleBlocked(user)}
-                    >
-                      {user.blocked ? "Desbloquear" : "Bloquear"}
-                    </Button>
-                  </ButtonGroup>
+                  <Button
+                    variant={user.isAdmin ? "success" : "danger"}
+                    className={user.isAdmin ? "bi bi-person-dash" : "bi bi-person-check"}
+                    style={{ marginRight: "5px", minWidth: "150px" }}
+                    title={user.isAdmin ? "Revogar Admin" : "Tornar Admin"}
+                    onClick={() => toggleAdmin(user)}
+                  >
+                    {user.isAdmin ? "Revogar Admin" : "Tornar Admin"}
+                  </Button>
+                  <Button
+                    variant={user.blocked ? "success" : "danger"}
+                    className={user.blocked ? "bi bi-person-check" : "bi bi-person-dash"}
+                    style={{ marginRight: "5px", minWidth: "150px" }}
+                    title={user.blocked ? "Desbloquear" : "Bloquear"}
+                    onClick={() => toggleBlocked(user)}
+                  >
+                    {user.blocked ? "Desbloquear" : "Bloquear"}
+                  </Button>
                 </td>
               </tr>
             ))}
