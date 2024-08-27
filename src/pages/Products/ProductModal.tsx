@@ -42,7 +42,6 @@ export default function ProductModal({ visible, setVisible, crudOperation, produ
     defaultValues: new Product(),
   });
 
-  const [buttonActive, setButtonActive] = useState(true);
   const [buttonText, setButtonText] = useState("");
   const [buttonVisible, setButtonVisible] = useState(false);
   const [submittingButtonText, setSubmittingButtonText] = useState("");
@@ -111,8 +110,6 @@ export default function ProductModal({ visible, setVisible, crudOperation, produ
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     const parsedProduct = schema.parse(formData) as Product;
 
-    setButtonActive(false);
-
     try {
       if (crudOperation === CrudOperation.Delete) {
         await productRepository.delete(product!.id);
@@ -133,8 +130,6 @@ export default function ProductModal({ visible, setVisible, crudOperation, produ
       });
 
       return;
-    } finally {
-      setButtonActive(true);
     }
 
     Toast.fire({
@@ -223,7 +218,7 @@ export default function ProductModal({ visible, setVisible, crudOperation, produ
           Fechar
         </Button>
         {buttonVisible && (
-          <Button variant={formColor} onClick={handleSubmit(onSubmit)} disabled={!buttonActive}>
+          <Button variant={formColor} onClick={handleSubmit(onSubmit)} disabled={isSubmitting}>
             {isSubmitting ? submittingButtonText : buttonText}
           </Button>
         )}

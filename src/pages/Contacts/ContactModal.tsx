@@ -49,7 +49,6 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
     defaultValues: new Contact(),
   });
 
-  const [buttonActive, setButtonActive] = useState(true);
   const [buttonText, setButtonText] = useState("");
   const [buttonVisible, setButtonVisible] = useState(false);
   const [submittingButtonText, setSubmittingButtonText] = useState("");
@@ -131,8 +130,6 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     const parsedContact = schema.parse(formData) as Contact;
 
-    setButtonActive(false);
-
     try {
       if (crudOperation === CrudOperation.Delete) {
         await contactRepository.delete(contact!.id);
@@ -153,8 +150,6 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
       });
 
       return;
-    } finally {
-      setButtonActive(true);
     }
 
     Toast.fire({
@@ -245,7 +240,7 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
           Fechar
         </Button>
         {buttonVisible && (
-          <Button variant={formColor} onClick={handleSubmit(onSubmit)} disabled={!buttonActive}>
+          <Button variant={formColor} onClick={handleSubmit(onSubmit)} disabled={isSubmitting}>
             {isSubmitting ? submittingButtonText : buttonText}
           </Button>
         )}
