@@ -55,7 +55,7 @@ export default function ProductModal({ visible, setVisible, crudOperation, produ
     if (!visible) {
       return;
     }
-    setProductFieldsIntoForm();
+    setFieldsIntoModal();
 
     updateFormByCrudOperation();
   }, [crudOperation, product, visible]);
@@ -64,7 +64,6 @@ export default function ProductModal({ visible, setVisible, crudOperation, produ
     setFormDisabled(false);
     setButtonVisible(true);
     if (crudOperation === CrudOperation.Create) {
-      reset(new Product(), { keepValues: false });
       setSubmittingButtonText("Cadastrando...");
       setButtonText("Cadastrar");
       setHeaderText("Cadastrar Produto");
@@ -99,11 +98,13 @@ export default function ProductModal({ visible, setVisible, crudOperation, produ
     setVisible(false);
   }
 
-  function setProductFieldsIntoForm() {
-    if (!product) {
+  function setFieldsIntoModal() {
+    reset(product || new Product(), { keepValues: false });
+
+    if (crudOperation === CrudOperation.Create) {
       return;
     }
-    reset(product, { keepValues: false });
+
     trigger();
   }
 

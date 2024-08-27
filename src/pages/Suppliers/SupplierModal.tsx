@@ -60,7 +60,10 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
   const watchSupplierType = watch("supplierType");
 
   useEffect(() => {
-    setSupplierFieldsIntoForm();
+    if (!visible) {
+      return;
+    }
+    setFieldsIntoModal();
 
     updateFormByCrudOperation();
   }, [crudOperation, supplier, visible]);
@@ -69,7 +72,6 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
     setFormDisabled(false);
     setButtonVisible(true);
     if (crudOperation === CrudOperation.Create) {
-      reset(new Supplier(), { keepValues: false });
       setSubmittingButtonText("Cadastrando...");
       setButtonText("Cadastrar");
       setHeaderText("Cadastrar Fornecedor");
@@ -104,11 +106,13 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
     setVisible(false);
   }
 
-  function setSupplierFieldsIntoForm() {
-    if (!supplier) {
+  function setFieldsIntoModal() {
+    reset(supplier || new Supplier(), { keepValues: false });
+
+    if (crudOperation === CrudOperation.Create) {
       return;
     }
-    reset(supplier, { keepValues: false });
+
     trigger();
   }
 

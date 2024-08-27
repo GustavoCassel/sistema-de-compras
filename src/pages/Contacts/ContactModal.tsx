@@ -63,7 +63,7 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
     if (!visible) {
       return;
     }
-    setContactFieldsIntoForm();
+    setFieldsIntoModal();
 
     updateSuppliers();
 
@@ -74,7 +74,6 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
     setFormDisabled(false);
     setButtonVisible(true);
     if (crudOperation === CrudOperation.Create) {
-      reset(new Contact(), { keepValues: false });
       setSubmittingButtonText("Cadastrando...");
       setButtonText("Cadastrar");
       setHeaderText("Cadastrar Contato");
@@ -109,11 +108,13 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
     setVisible(false);
   }
 
-  function setContactFieldsIntoForm() {
-    if (!contact) {
+  function setFieldsIntoModal() {
+    reset(contact || new Contact(), { keepValues: false });
+
+    if (crudOperation === CrudOperation.Create) {
       return;
     }
-    reset(contact, { keepValues: false });
+
     trigger();
   }
 
