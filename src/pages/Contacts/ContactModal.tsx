@@ -9,8 +9,8 @@ import Swal from "sweetalert2";
 import { z } from "zod";
 import { CrudOperation, PHONE_MASK } from "../../data/constants";
 import { Contact, contactRepository } from "../../models/ContactRepository";
-import { Toast } from "../../utils/Alerts";
 import { Supplier, supplierRepository } from "../../models/SupplierRepository";
+import { Toast } from "../../utils/Alerts";
 
 type ContactModalProps = {
   visible: boolean;
