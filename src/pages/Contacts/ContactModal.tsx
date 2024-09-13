@@ -20,17 +20,12 @@ type ContactModalProps = {
   updateContactsTable: () => void;
 };
 
-const SUPPLIER_ID_EMPTY = "Selecione um fornecedor";
-
 const schema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   active: z.boolean(),
   email: z.string().email({ message: "Email inválido" }),
   phone: z.string().min(15, "Telefone é obrigatório"),
-  supplierId: z
-    .string()
-    .min(1, { message: "Fornecedor é obrigatório" })
-    .refine((value) => value !== SUPPLIER_ID_EMPTY, { message: "Fornecedor é obrigatório" }),
+  supplierId: z.string().min(1, { message: "Fornecedor é obrigatório" }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -217,10 +212,8 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
                 {...register("supplierId")}
                 control={control}
                 render={({ field }) => (
-                  <Form.Select {...field} isInvalid={!!errors.supplierId} defaultValue={SUPPLIER_ID_EMPTY}>
-                    <option key={SUPPLIER_ID_EMPTY} value={SUPPLIER_ID_EMPTY}>
-                      {SUPPLIER_ID_EMPTY}
-                    </option>
+                  <Form.Select {...field} isInvalid={!!errors.supplierId}>
+                    <option value="">Selecione um fornecedor</option>
                     {suppliers.map((supplier) => (
                       <option key={supplier.id} value={supplier.id}>
                         {supplier.name}

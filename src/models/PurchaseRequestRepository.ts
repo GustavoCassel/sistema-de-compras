@@ -1,4 +1,6 @@
+import { Timestamp } from "firebase/firestore";
 import { FirebaseRepository } from "../context/FirebaseRepository";
+import moment from "moment";
 
 export enum PurchaseRequestStatus {
   Open = "Aberta",
@@ -11,13 +13,13 @@ export const NUMBER_OF_QUOTES_REQUIRED = 3;
 
 export class PurchaseRequest {
   id: string = "";
-  requestDate: Date = new Date();
+  requestDate: string = moment().format("YYYY-MM-DD");
   requesterId: string = "";
   productId: string = "";
   quantity: number = 0;
   quotationIds: string[] = [];
   status: PurchaseRequestStatus = getPurchaseRequestStatus(this);
-  approvalDate?: Date = undefined;
+  approvalDate?: string = undefined;
   observations?: string = undefined;
 }
 

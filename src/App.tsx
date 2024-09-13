@@ -12,6 +12,7 @@ import {
   NOT_FOUND_ENDPOINT,
   PRODUCTS_ENDPOINT,
   PURCHASE_REQUESTS_ENDPOINT,
+  QUOTATIONS_ENDPOINT,
   SUPPLIERS_ENDPOINT,
   USERS_ENDPOINT,
 } from "./data/constants";
@@ -22,6 +23,8 @@ import LoginRegister from "./pages/LoginRegister";
 import Navbar from "./pages/Navbar";
 import NotFound from "./pages/NotFound";
 import Products from "./pages/Products";
+import PurchaseRequests from "./pages/PurchaseRequests";
+import Quotations from "./pages/Quotations";
 import Suppliers from "./pages/Suppliers";
 import Users from "./pages/Users";
 
@@ -60,7 +63,7 @@ function UserRoutes() {
         <Route index element={<Home />} />
         <Route path={LOGIN_ENDPOINT} element={<LoginRegister />} />
         <Route path={NOT_FOUND_ENDPOINT} element={<NotFound />} />
-        <Route path={PURCHASE_REQUESTS_ENDPOINT} element={<h1>compras</h1>} />
+        <Route path={PURCHASE_REQUESTS_ENDPOINT} element={<PurchaseRequests />} />
       </Route>
     </Routes>
   );
@@ -77,6 +80,7 @@ function AdminRoutes() {
         <Route path={CONTACTS_ENDPOINT} element={<Contacts />} />
         <Route path={PRODUCTS_ENDPOINT} element={<Products />} />
         <Route path={USERS_ENDPOINT} element={<Users />} />
+        <Route path={QUOTATIONS_ENDPOINT} element={<Quotations />} />
       </Route>
     </Routes>
   );
