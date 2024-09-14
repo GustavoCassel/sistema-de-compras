@@ -5,6 +5,7 @@ import activeImg from "../../assets/green_square.png";
 import inactiveImg from "../../assets/red_square.png";
 import { CrudOperation } from "../../data/constants";
 import { PurchaseRequest } from "../../models/PurchaseRequestRepository";
+import { Badge } from "react-bootstrap";
 
 export type PurchaseRequestsTableProps = {
   purchaseRequests: PurchaseRequest[];
@@ -25,7 +26,6 @@ export default function PurchaseRequestsTable({ purchaseRequests, showModal }: P
           <th>Produto</th>
           <th>Quantidade</th>
           <th>Status</th>
-          <th>Data da Aprovação</th>
           <th>Observações</th>
         </tr>
       </thead>
@@ -33,11 +33,14 @@ export default function PurchaseRequestsTable({ purchaseRequests, showModal }: P
         {purchaseRequests.map((purchaseRequest) => (
           <tr key={purchaseRequest.id}>
             <td>{purchaseRequest.requestDate}</td>
-            <td>{purchaseRequest.requesterId}</td>
-            <td>{purchaseRequest.productId}</td>
+            <td>{purchaseRequest.requesterEmail}</td>
+            <td>{purchaseRequest.product?.name}</td>
             <td>{purchaseRequest.quantity}</td>
-            <td>{purchaseRequest.status}</td>
-            <td>{purchaseRequest.approvalDate}</td>
+            <td>
+              <Badge bg={purchaseRequest.status === "Aberta" ? "danger" : purchaseRequest.status === "Em cotação" ? "warning" : "success"}>
+                {purchaseRequest.status}
+              </Badge>
+            </td>
             <td>{purchaseRequest.observations}</td>
             <td>
               <ButtonGroup>

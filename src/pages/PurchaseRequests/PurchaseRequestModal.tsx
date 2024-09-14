@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { z } from "zod";
 import { CrudOperation } from "../../data/constants";
@@ -12,6 +12,9 @@ import { PurchaseRequest, purchaseRequestRepository } from "../../models/Purchas
 import { Toast } from "../../utils/Alerts";
 import { Product, productRepository } from "../../models/ProductRepository";
 import { Supplier, supplierRepository } from "../../models/SupplierRepository";
+import Loading from "../../components/Loading";
+import { User } from "firebase/auth";
+import { FirebaseUserContext } from "../../App";
 
 type PurchaseRequestModalProps = {
   visible: boolean;
@@ -26,12 +29,11 @@ const schema = z.object({
     .string()
     .min(1, "Data da Solicitação é obrigatória")
     .refine((value) => moment(value).isValid(), { message: "Data inválida" }),
-  requesterId: z.string().min(1, "Solicitante é obrigatório"),
+  requesterEmail: z.string().min(1, "Solicitante é obrigatório"),
   productId: z.string().min(1, "Produto é obrigatório"),
-  quantity: z.number().min(1, "Quantidade é obrigatória"),
+  quantity: z.coerce.number().min(1, "Quantidade é obrigatória"),
   quotationIds: z.array(z.string()),
   status: z.string().min(1, "Status é obrigatório"),
-  approvalDate: z.string().optional(),
   observations: z.string().optional(),
 });
 
@@ -42,6 +44,7 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
     register,
     handleSubmit,
     reset,
+    control,
     setValue,
     trigger,
     formState: { errors, isSubmitting },
@@ -58,32 +61,19 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
   const [formColor, setFormColor] = useState("");
   const [formDisabled, setFormDisabled] = useState(false);
 
-  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [loadingProducts, setLoadingProducts] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
 
-  const [loadingSuppliers, setLoadingSuppliers] = useState(true);
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const currentFirebaseUser = useContext(FirebaseUserContext);
 
   async function loadProducts() {
-    console.log("loading products");
     setLoadingProducts(true);
     try {
       const products = await productRepository.getAll();
-      console.log("products", products);
+
       setProducts(products);
     } finally {
       setLoadingProducts(false);
-    }
-  }
-
-  async function loadSuppliers() {
-    setLoadingSuppliers(true);
-    try {
-      const suppliers = await supplierRepository.getAll();
-
-      setSuppliers(suppliers);
-    } finally {
-      setLoadingSuppliers(false);
     }
   }
 
@@ -95,9 +85,8 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
 
     updateFormByCrudOperation();
 
-    if (crudOperation === CrudOperation.Create) {
+    if (crudOperation === CrudOperation.Create || crudOperation === CrudOperation.Update) {
       loadProducts();
-      loadSuppliers();
     }
   }, [crudOperation, purchaseRequest, visible]);
 
@@ -105,6 +94,7 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
     setFormDisabled(false);
     setButtonVisible(true);
     if (crudOperation === CrudOperation.Create) {
+      setValue("requesterEmail", currentFirebaseUser?.email!);
       setSubmittingButtonText("Cadastrando...");
       setButtonText("Cadastrar");
       setHeaderText("Cadastrar Solicitação de Compra");
@@ -198,59 +188,47 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
         <Form>
           <fieldset disabled={formDisabled}>
             <Container>
-              <Form.Group className="mb-3" controlId="requestDate">
-                <FloatingLabel controlId="requestDate" label="Data da Solicitação">
-                  <Form.Control type="date" {...register("requestDate")} isInvalid={!!errors.requestDate} disabled />
-                  <Form.Control.Feedback type="invalid">{errors.requestDate?.message}</Form.Control.Feedback>
-                </FloatingLabel>
-              </Form.Group>
+              <FloatingLabel label="Data da Solicitação" className="mb-3">
+                <Form.Control type="date" {...register("requestDate")} isInvalid={!!errors.requestDate} disabled />
+                <Form.Control.Feedback type="invalid">{errors.requestDate?.message}</Form.Control.Feedback>
+              </FloatingLabel>
 
-              <Form.Group className="mb-3" controlId="requesterId">
-                <FloatingLabel controlId="requesterId" label="Solicitante">
-                  <Form.Control as="select" {...register("requesterId")} isInvalid={!!errors.requesterId}>
-                    <option value="">Selecione um solicitante</option>
-                    <option value="1">Solicitante 1</option>
-                    <option value="2">Solicitante 2</option>
-                  </Form.Control>
-                  <Form.Control.Feedback type="invalid">{errors.requesterId?.message}</Form.Control.Feedback>
-                </FloatingLabel>
-              </Form.Group>
+              <FloatingLabel label="Solicitante" className="mb-3">
+                <Form.Control type="text" placeholder="" isInvalid={!!errors.requesterEmail} {...register("requesterEmail")} disabled />
+                <Form.Control.Feedback type="invalid">{errors.requesterEmail?.message}</Form.Control.Feedback>
+              </FloatingLabel>
 
-              <Form.Group className="mb-3" controlId="productId">
-                <FloatingLabel controlId="productId" label="Produto">
-                  {loadingProducts && <p>Carregando produtos...</p>}
-                  <Form.Control as="select" {...register("productId")} isInvalid={!!errors.productId}>
-                    <option value="">Selecione um produto</option>
-                    {products.map((product) => (
-                      <option key={product.id} value={product.id}>
-                        {product.name}
-                      </option>
-                    ))}
-                  </Form.Control>
+              {loadingProducts ? (
+                <Loading className="mb-3" />
+              ) : (
+                <FloatingLabel label="Produto" className="mb-3">
+                  <Controller
+                    {...register("productId")}
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Select {...field} isInvalid={!!errors.productId}>
+                        <option value="">Selecione um produto</option>
+                        {products.map((product) => (
+                          <option key={product.id} value={product.id}>
+                            {product.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    )}
+                  />
                   <Form.Control.Feedback type="invalid">{errors.productId?.message}</Form.Control.Feedback>
                 </FloatingLabel>
-              </Form.Group>
+              )}
 
-              <Form.Group className="mb-3" controlId="quantity">
-                <FloatingLabel controlId="quantity" label="Quantidade">
-                  <Form.Control type="number" {...register("quantity")} isInvalid={!!errors.quantity} />
-                  <Form.Control.Feedback type="invalid">{errors.quantity?.message}</Form.Control.Feedback>
-                </FloatingLabel>
-              </Form.Group>
+              <FloatingLabel label="Quantidade" className="mb-3">
+                <Form.Control type="number" {...register("quantity")} isInvalid={!!errors.quantity} />
+                <Form.Control.Feedback type="invalid">{errors.quantity?.message}</Form.Control.Feedback>
+              </FloatingLabel>
 
-              <Form.Group className="mb-3" controlId="approvalDate">
-                <FloatingLabel controlId="approvalDate" label="Data de Aprovação">
-                  <Form.Control type="date" {...register("approvalDate")} isInvalid={!!errors.approvalDate} />
-                  <Form.Control.Feedback type="invalid">{errors.approvalDate?.message}</Form.Control.Feedback>
-                </FloatingLabel>
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="observations">
-                <FloatingLabel controlId="observations" label="Observações">
-                  <Form.Control as="textarea" {...register("observations")} isInvalid={!!errors.observations} />
-                  <Form.Control.Feedback type="invalid">{errors.observations?.message}</Form.Control.Feedback>
-                </FloatingLabel>
-              </Form.Group>
+              <FloatingLabel label="Observações" className="mb-3">
+                <Form.Control as="textarea" {...register("observations")} isInvalid={!!errors.observations} />
+                <Form.Control.Feedback type="invalid">{errors.observations?.message}</Form.Control.Feedback>
+              </FloatingLabel>
             </Container>
           </fieldset>
         </Form>

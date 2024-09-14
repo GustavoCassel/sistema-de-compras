@@ -23,6 +23,10 @@ export default function Home() {
       <h6>As consultas sempre retornam todos os registros, oque pode escalar mal em um ambiente de produção</h6>
       <h6>Por ex: ao excluir um fornecedor, teria q excluir todos os contatos relacionados. Porque senão vai ficar inconsistente</h6>
       <h6>Filtrar as amarraçoes de fornecedor e contato para somente ativos</h6>
+
+      <h3>A fazer</h3>
+
+      <h6>Ajustar valores das quantidades em uma solicitação de compra baseada na unidade de medida do produto</h6>
     </>
   );
 }

@@ -86,6 +86,20 @@ export abstract class FirebaseRepository<T extends TFirestoreEntity> {
     return items;
   }
 
+  async getManyByField<K extends keyof T>(fieldName: K, fieldValues: T[K][]): Promise<T[]> {
+    const items: T[] = [];
+
+    for (const fieldValue of fieldValues) {
+      const item = await this.getUniqueByField(fieldName, fieldValue);
+
+      if (item) {
+        items.push(item);
+      }
+    }
+
+    return items;
+  }
+
   async getUniqueByField<K extends keyof T>(fieldName: K, fieldValue: T[K]): Promise<T | null> {
     const items = await this.getByField(fieldName, fieldValue);
 

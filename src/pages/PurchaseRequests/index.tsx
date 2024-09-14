@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { CrudOperation } from "../../data/constants";
 import { PurchaseRequest, purchaseRequestRepository } from "../../models/PurchaseRequestRepository";
 import PurchaseRequestModal from "./PurchaseRequestModal";
 import PurchaseRequestsTable from "./PurchaseRequestsTable";
 import Swal from "sweetalert2";
+import { FirebaseUserContext } from "../../App";
 
 export default function PurchaseRequests() {
   const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>([]);
@@ -12,6 +13,8 @@ export default function PurchaseRequests() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [crudOperation, setCrudOperation] = useState<CrudOperation>(CrudOperation.Create);
+
+  const currentFirebaseUser = useContext(FirebaseUserContext);
 
   function showModal(crudOperation: CrudOperation, purchaseRequest?: PurchaseRequest) {
     setModalVisible(true);
@@ -26,7 +29,21 @@ export default function PurchaseRequests() {
   async function updateTable() {
     setLoading(true);
     try {
-      const requests = await purchaseRequestRepository.getAll();
+      if (!currentFirebaseUser) {
+        throw new Error("Usuário não autenticado");
+      }
+
+      let requests: PurchaseRequest[];
+
+      if (currentFirebaseUser.isAdmin) {
+        requests = await purchaseRequestRepository.getAll();
+      } else {
+        requests = await purchaseRequestRepository.getByField("requesterEmail", currentFirebaseUser.email);
+      }
+
+      await purchaseRequestRepository.fullFillFirebaseUsers(requests);
+
+      await purchaseRequestRepository.fullFillProducts(requests);
 
       setPurchaseRequests(requests);
     } catch (error) {
