@@ -22,6 +22,10 @@ class SupplierRepository extends FirebaseRepository<Supplier> {
   constructor() {
     super("suppliers");
   }
+
+  async getAllActive(): Promise<Supplier[]> {
+    return this.getByField("active", true);
+  }
 }
 
 export const supplierRepository = new SupplierRepository();

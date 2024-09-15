@@ -16,12 +16,8 @@ class ContactRepository extends FirebaseRepository<Contact> {
     super("contacts");
   }
 
-  async findActiveContacts(): Promise<Contact[]> {
+  async getAllActive(): Promise<Contact[]> {
     return this.getByField("active", true);
-  }
-
-  async findBySupplier(supplierId: string): Promise<Contact[]> {
-    return this.getByField("supplierId", supplierId);
   }
 
   async fullFillSupplier(contact: Contact): Promise<void> {

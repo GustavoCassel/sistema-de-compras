@@ -30,6 +30,10 @@ class ProductRepository extends FirebaseRepository<Product> {
   constructor() {
     super("products");
   }
+
+  async getAllActive(): Promise<Product[]> {
+    return this.getByField("active", true);
+  }
 }
 
 export const productRepository = new ProductRepository();
