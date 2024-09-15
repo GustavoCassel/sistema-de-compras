@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import CurrencyInput, { CurrencyInputOnChangeValues } from "react-currency-input-field";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { z } from "zod";
@@ -12,7 +13,6 @@ import { APP_CURRENCY_LOCALE_FORMAT, CrudOperation, DATE_FORMAT } from "../../da
 import { Quotation, quotationRepository } from "../../models/QuotationRepository";
 import { Supplier, supplierRepository } from "../../models/SupplierRepository";
 import { Toast } from "../../utils/Alerts";
-import CurrencyInput, { CurrencyInputOnChangeValues } from "react-currency-input-field";
 
 type QuotationModalProps = {
   visible: boolean;

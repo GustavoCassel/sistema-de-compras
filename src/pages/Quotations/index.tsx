@@ -1,18 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import { CrudOperation } from "../../data/constants";
-import QuotationModal from "./QuotationModal";
-import { Quotation, quotationRepository } from "../../models/QuotationRepository";
 import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import QuotationsTable from "./QuotationsTable";
-import Loading from "../../components/Loading";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
+import Loading from "../../components/Loading";
+import { CrudOperation } from "../../data/constants";
+import { PurchaseRequest, purchaseRequestRepository, PurchaseRequestStatus } from "../../models/PurchaseRequestRepository";
+import { Quotation, quotationRepository } from "../../models/QuotationRepository";
+import QuotationModal from "./QuotationModal";
+import QuotationsTable from "./QuotationsTable";
 
 export default function Quotations() {
+  const [loading, setLoading] = useState(true);
+
   const [quotation, setSelectedQuotation] = useState<Quotation | undefined>();
   const [quotations, setQuotations] = useState<Quotation[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  const [purchaseRequest, setPurchaseRequest] = useState<PurchaseRequest | undefined>();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [crudOperation, setCrudOperation] = useState<CrudOperation>(CrudOperation.Create);
@@ -24,15 +28,47 @@ export default function Quotations() {
     throw new Error("ID da requisição de compra não informado");
   }
 
-  function showModal(crudOperation: CrudOperation, quotation?: Quotation) {
+  async function showModal(crudOperation: CrudOperation, quotation?: Quotation) {
+    if (crudOperation === CrudOperation.Create && purchaseRequest) {
+      await purchaseRequestRepository.fullFillStatusSingle(purchaseRequest);
+
+      if (purchaseRequest.status === PurchaseRequestStatus.Quoted) {
+        Swal.fire({
+          icon: "success",
+          title: "Cotações já finalizadas",
+          html: "O máximo de cotações já foi atingido para esta requisição de compra",
+        });
+        return;
+      }
+    }
+
     setModalVisible(true);
     setCrudOperation(crudOperation);
     setSelectedQuotation(quotation);
   }
 
   useEffect(() => {
+    loadPurchaseRequest();
     updateTable();
   }, [currentFirebaseUser]);
+
+  async function loadPurchaseRequest() {
+    try {
+      const request = await purchaseRequestRepository.getById(purchaseRequestId);
+      if (!request) {
+        throw new Error("Requisição de compra não encontrada");
+      }
+
+      setPurchaseRequest(request);
+    } catch (error) {
+      const err = error as Error;
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao carregar a requisição de compra",
+        html: err.message,
+      });
+    }
+  }
 
   async function updateTable() {
     setLoading(true);
