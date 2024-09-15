@@ -45,6 +45,8 @@ export default function PurchaseRequests() {
 
       await purchaseRequestRepository.fullFillProducts(requests);
 
+      await Promise.all(requests.map((request) => purchaseRequestRepository.fullFillQuotations(request)));
+
       setPurchaseRequests(requests);
     } catch (error) {
       const err = error as Error;

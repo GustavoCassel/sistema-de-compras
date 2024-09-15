@@ -1,9 +1,9 @@
-import { Timestamp } from "firebase/firestore";
-import { FirebaseRepository } from "../context/FirebaseRepository";
 import moment from "moment";
-import { Product, productRepository } from "./ProductRepository";
+import { FirebaseRepository } from "../context/FirebaseRepository";
 import { FirebaseUser, firebaseUserRepository } from "./FirebaseUserRepository";
-import { Quotation } from "./QuotationRepository";
+import { Product, productRepository } from "./ProductRepository";
+import { Quotation, quotationRepository } from "./QuotationRepository";
+import { DATE_FORMAT } from "../data/constants";
 
 export enum PurchaseRequestStatus {
   Open = "Aberta",
@@ -16,7 +16,7 @@ export const NUMBER_OF_QUOTES_REQUIRED = 3;
 
 export class PurchaseRequest {
   id: string = "";
-  requestDate: string = moment().format("YYYY-MM-DD");
+  requestDate: string = moment().format(DATE_FORMAT);
   requesterEmail: string = "";
   requester: FirebaseUser | undefined = undefined;
   productId: string = "";
@@ -81,6 +81,12 @@ class PurchaseRequestRepository extends FirebaseRepository<PurchaseRequest> {
     purchaseRequests.forEach((purchaseRequest) => {
       purchaseRequest.product = products.find((product) => product.id === purchaseRequest.productId);
     });
+  }
+
+  async fullFillQuotations(purchaseRequest: PurchaseRequest): Promise<void> {
+    const quotations = await Promise.all(purchaseRequest.quotationIds.map((quotationId) => quotationRepository.getById(quotationId)));
+
+    purchaseRequest.quotations = quotations.filter((quotation) => quotation !== null) as Quotation[];
   }
 }
 

@@ -7,7 +7,7 @@ import Modal from "react-bootstrap/Modal";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { z } from "zod";
-import { CrudOperation } from "../../data/constants";
+import { CrudOperation, DATE_FORMAT } from "../../data/constants";
 import { PurchaseRequest, purchaseRequestRepository } from "../../models/PurchaseRequestRepository";
 import { Toast } from "../../utils/Alerts";
 import { Product, productRepository } from "../../models/ProductRepository";
@@ -28,7 +28,7 @@ const schema = z.object({
   requestDate: z
     .string()
     .min(1, "Data da Solicitação é obrigatória")
-    .refine((value) => moment(value).isValid(), { message: "Data inválida" }),
+    .refine((value) => moment(value, DATE_FORMAT).isValid(), { message: "Data inválida" }),
   requesterEmail: z.string().min(1, "Solicitante é obrigatório"),
   productId: z.string().min(1, "Produto é obrigatório"),
   quantity: z.coerce.number().min(1, "Quantidade é obrigatória"),
@@ -187,7 +187,7 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
           <fieldset disabled={formDisabled}>
             <Container>
               <FloatingLabel label="Data da Solicitação" className="mb-3">
-                <Form.Control type="date" {...register("requestDate")} isInvalid={!!errors.requestDate} disabled />
+                <Form.Control type="datetime" {...register("requestDate")} isInvalid={!!errors.requestDate} disabled />
                 <Form.Control.Feedback type="invalid">{errors.requestDate?.message}</Form.Control.Feedback>
               </FloatingLabel>
 

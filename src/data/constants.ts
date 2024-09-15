@@ -15,6 +15,9 @@ export const CPF_MASK: string = "999.999.999-99";
 export const CEP_MASK: string = "99999-999";
 export const PHONE_MASK: string = "(99) 99999-9999";
 
+// Date formats
+export const DATE_FORMAT: string = "DD/MM/YYYY HH:mm";
+
 // Global enums
 export enum CrudOperation {
   Create,

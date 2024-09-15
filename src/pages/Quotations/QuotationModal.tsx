@@ -8,7 +8,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { z } from "zod";
 import Loading from "../../components/Loading";
-import { CrudOperation } from "../../data/constants";
+import { CrudOperation, DATE_FORMAT } from "../../data/constants";
 import { Quotation, quotationRepository } from "../../models/QuotationRepository";
 import { Supplier, supplierRepository } from "../../models/SupplierRepository";
 import { Toast } from "../../utils/Alerts";
@@ -26,7 +26,7 @@ const schema = z.object({
   quotationDate: z
     .string()
     .min(1, "Data da Solicitação é obrigatória")
-    .refine((value) => moment(value).isValid(), { message: "Data inválida" }),
+    .refine((value) => moment(value, DATE_FORMAT).isValid(), { message: "Data inválida" }),
   supplierId: z.string().min(1, "Fornecedor é obrigatório"),
   purchaseRequestId: z.string().min(1, "Requisição é obrigatória"),
   price: z.number().min(0.01, "Preço é obrigatório"),

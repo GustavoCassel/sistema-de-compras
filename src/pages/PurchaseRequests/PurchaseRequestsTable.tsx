@@ -30,26 +30,57 @@ export default function PurchaseRequestsTable({ purchaseRequests, showModal }: P
       </thead>
       <tbody>
         {purchaseRequests.map((purchaseRequest) => (
-          <tr key={purchaseRequest.id}>
-            <td>{purchaseRequest.requestDate}</td>
-            <td>{purchaseRequest.requesterEmail}</td>
-            <td>{purchaseRequest.product?.name}</td>
-            <td>{purchaseRequest.quantity}</td>
-            <td>
-              <Badge bg={purchaseRequest.status === "Aberta" ? "danger" : purchaseRequest.status === "Em cotação" ? "warning" : "success"}>
-                {purchaseRequest.status}
-              </Badge>
-            </td>
-            <td>{purchaseRequest.observations}</td>
-            <td>
-              <ButtonGroup>
-                <Button variant="info" className="bi bi-info-square" title="Visualizar" onClick={() => showModal(CrudOperation.Read, purchaseRequest)} />
-                <Button variant="warning" className="bi bi-pencil-square" title="Editar" onClick={() => showModal(CrudOperation.Update, purchaseRequest)} />
-                <Button variant="danger" className="bi bi-trash" title="Excluir" onClick={() => showModal(CrudOperation.Delete, purchaseRequest)} />
-                <Button variant="success" className="bi bi-currency-dollar" title="Cotações" onClick={() => {}} />
-              </ButtonGroup>
-            </td>
-          </tr>
+          <>
+            <tr key={purchaseRequest.id}>
+              <td>{purchaseRequest.requestDate}</td>
+              <td>{purchaseRequest.requesterEmail}</td>
+              <td>{purchaseRequest.product?.name}</td>
+              <td>{purchaseRequest.quantity}</td>
+              <td>
+                <Badge bg={purchaseRequest.status === "Aberta" ? "danger" : purchaseRequest.status === "Em cotação" ? "warning" : "success"}>
+                  {purchaseRequest.status}
+                </Badge>
+              </td>
+              <td>{purchaseRequest.observations}</td>
+              <td>
+                <ButtonGroup>
+                  <Button variant="info" className="bi bi-info-square" title="Visualizar" onClick={() => showModal(CrudOperation.Read, purchaseRequest)} />
+                  <Button variant="warning" className="bi bi-pencil-square" title="Editar" onClick={() => showModal(CrudOperation.Update, purchaseRequest)} />
+                  <Button variant="danger" className="bi bi-trash" title="Excluir" onClick={() => showModal(CrudOperation.Delete, purchaseRequest)} />
+                  <Button variant="success" className="bi bi-currency-dollar" title="Cotações" onClick={() => {}} />
+                </ButtonGroup>
+              </td>
+            </tr>
+            <tr>
+              {!purchaseRequest.quotations || purchaseRequest.quotations.length === 0 ? (
+                <td colSpan={7}>Nenhuma cotação encontrada</td>
+              ) : (
+                <td colSpan={7}>
+                  <Table striped bordered hover size="sm">
+                    <thead>
+                      <tr>
+                        <th>Data da Cotação</th>
+                        <th>Fornecedor</th>
+                        <th>Preço Unitário</th>
+                        <th>Quantidade</th>
+                        <th>Observações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {purchaseRequest.quotations.map((quotation) => (
+                        <tr key={quotation.id}>
+                          <td>{quotation.quotationDate}</td>
+                          <td>{quotation.supplier?.name}</td>
+                          <td>{quotation.price}</td>
+                          <td>{quotation.observations}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </td>
+              )}
+            </tr>
+          </>
         ))}
       </tbody>
     </Table>
