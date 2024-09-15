@@ -1,12 +1,13 @@
+import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { CrudOperation } from "../../data/constants";
-import { PurchaseRequest, purchaseRequestRepository } from "../../models/PurchaseRequestRepository";
-import PurchaseRequestModal from "./PurchaseRequestModal";
-import PurchaseRequestsTable from "./PurchaseRequestsTable";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
 import Loading from "../../components/Loading";
+import { CrudOperation, DATE_FORMAT } from "../../data/constants";
+import { PurchaseRequest, purchaseRequestRepository } from "../../models/PurchaseRequestRepository";
+import PurchaseRequestModal from "./PurchaseRequestModal";
+import PurchaseRequestsTable from "./PurchaseRequestsTable";
 
 export default function PurchaseRequests() {
   const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>([]);
@@ -47,6 +48,21 @@ export default function PurchaseRequests() {
       await purchaseRequestRepository.fullFillProducts(requests);
 
       await purchaseRequestRepository.fullFillStatus(requests);
+
+      requests = requests.sort((a, b) => {
+        const dateA = moment(a.requestDate, DATE_FORMAT);
+        const dateB = moment(b.requestDate, DATE_FORMAT);
+
+        if (dateA.isBefore(dateB)) {
+          return 1;
+        }
+
+        if (dateA.isAfter(dateB)) {
+          return -1;
+        }
+
+        return 0;
+      });
 
       setPurchaseRequests(requests);
     } catch (error) {
