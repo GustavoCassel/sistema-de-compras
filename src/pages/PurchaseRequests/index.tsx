@@ -6,6 +6,7 @@ import PurchaseRequestModal from "./PurchaseRequestModal";
 import PurchaseRequestsTable from "./PurchaseRequestsTable";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
+import Loading from "../../components/Loading";
 
 export default function PurchaseRequests() {
   const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>([]);
@@ -24,7 +25,7 @@ export default function PurchaseRequests() {
 
   useEffect(() => {
     updateTable();
-  }, []);
+  }, [currentFirebaseUser]);
 
   async function updateTable() {
     setLoading(true);
@@ -45,7 +46,7 @@ export default function PurchaseRequests() {
 
       await purchaseRequestRepository.fullFillProducts(requests);
 
-      await Promise.all(requests.map((request) => purchaseRequestRepository.fullFillQuotations(request)));
+      await purchaseRequestRepository.fullFillStatus(requests);
 
       setPurchaseRequests(requests);
     } catch (error) {
@@ -63,11 +64,13 @@ export default function PurchaseRequests() {
   return (
     <>
       <div className="d-flex justify-content-between">
-        <h2>Requisições de Compra</h2>
-        <Button variant="primary" onClick={() => showModal(CrudOperation.Create)}>
-          <i className="bi bi-plus-square me-2" />
-          Cadastrar
-        </Button>
+        <h2>{currentFirebaseUser?.isAdmin ? "Todas as Requisições de Compra" : "Suas Requisições de Compra"}</h2>
+        {!currentFirebaseUser?.isAdmin && (
+          <Button variant="primary" onClick={() => showModal(CrudOperation.Create)}>
+            <i className="bi bi-plus-square me-2" />
+            Cadastrar
+          </Button>
+        )}
       </div>
       <PurchaseRequestModal
         visible={modalVisible}
@@ -76,7 +79,11 @@ export default function PurchaseRequests() {
         purchaseRequest={selectedRequest}
         updateTable={updateTable}
       />
-      <PurchaseRequestsTable purchaseRequests={purchaseRequests} showModal={showModal} />
+      {loading ? (
+        <Loading />
+      ) : (
+        <PurchaseRequestsTable showRequester={!!currentFirebaseUser?.isAdmin} purchaseRequests={purchaseRequests} showModal={showModal} />
+      )}
     </>
   );
 }

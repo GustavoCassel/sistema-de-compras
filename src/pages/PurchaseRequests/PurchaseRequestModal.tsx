@@ -7,14 +7,12 @@ import Modal from "react-bootstrap/Modal";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { z } from "zod";
+import { FirebaseUserContext } from "../../App";
+import Loading from "../../components/Loading";
 import { CrudOperation, DATE_FORMAT } from "../../data/constants";
+import { Product, productRepository } from "../../models/ProductRepository";
 import { PurchaseRequest, purchaseRequestRepository } from "../../models/PurchaseRequestRepository";
 import { Toast } from "../../utils/Alerts";
-import { Product, productRepository } from "../../models/ProductRepository";
-import { Supplier, supplierRepository } from "../../models/SupplierRepository";
-import Loading from "../../components/Loading";
-import { User } from "firebase/auth";
-import { FirebaseUserContext } from "../../App";
 
 type PurchaseRequestModalProps = {
   visible: boolean;
@@ -32,8 +30,6 @@ const schema = z.object({
   requesterEmail: z.string().min(1, "Solicitante é obrigatório"),
   productId: z.string().min(1, "Produto é obrigatório"),
   quantity: z.coerce.number().min(1, "Quantidade é obrigatória"),
-  quotationIds: z.array(z.string()),
-  status: z.string().min(1, "Status é obrigatório"),
   observations: z.string().optional(),
 });
 

@@ -1,4 +1,7 @@
-// Endpoint
+import { IntlConfig } from "react-currency-input-field/dist/components/CurrencyInputProps";
+import { formatValue as formatter } from "react-currency-input-field";
+
+// Endpoints
 export const HOME_ENDPOINT: string = "/";
 export const LOGIN_ENDPOINT: string = "/login-register";
 export const NOT_FOUND_ENDPOINT: string = "*";
@@ -30,3 +33,19 @@ export enum CrudOperation {
 export const CEP_REGEX: RegExp = /^\d{5}-\d{3}$/;
 export const CPF_REGEX: RegExp = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
 export const CNPJ_REGEX: RegExp = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+
+// Currency
+export const APP_CURRENCY_LOCALE_FORMAT: IntlConfig = {
+  locale: "pt-BR",
+  currency: "BRL",
+};
+
+// Value Formaters
+export const formatValue = (value: number) => {
+  const options = {
+    value: value.toString(),
+    intlConfig: APP_CURRENCY_LOCALE_FORMAT,
+    decimalScale: 2,
+  };
+  return formatter(options);
+};

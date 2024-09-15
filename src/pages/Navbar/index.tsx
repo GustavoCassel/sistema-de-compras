@@ -7,15 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { NavLink, Outlet } from "react-router-dom";
 import { FirebaseUserContext } from "../../App";
 import { auth } from "../../context/FirebaseContext";
-import {
-  CONTACTS_ENDPOINT,
-  HOME_ENDPOINT,
-  PRODUCTS_ENDPOINT,
-  PURCHASE_REQUESTS_ENDPOINT,
-  QUOTATIONS_ENDPOINT,
-  SUPPLIERS_ENDPOINT,
-  USERS_ENDPOINT,
-} from "../../data/constants";
+import { CONTACTS_ENDPOINT, HOME_ENDPOINT, PRODUCTS_ENDPOINT, PURCHASE_REQUESTS_ENDPOINT, SUPPLIERS_ENDPOINT, USERS_ENDPOINT } from "../../data/constants";
 import "./styles.css";
 
 export default function AppHeader() {
@@ -88,9 +80,9 @@ function AdminNavbar() {
         <i className="bi bi-box me-2" />
         Produtos
       </Nav.Link>
-      <Nav.Link as={NavLink} to={QUOTATIONS_ENDPOINT}>
-        <i className="bi bi-currency-dollar me-2" />
-        Cotações
+      <Nav.Link as={NavLink} to={PURCHASE_REQUESTS_ENDPOINT}>
+        <i className="bi bi-basket me-2" />
+        Requisições de Compra
       </Nav.Link>
       <Nav.Link as={NavLink} to={USERS_ENDPOINT}>
         <i className="bi bi-people me-2" />

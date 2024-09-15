@@ -64,6 +64,7 @@ function UserRoutes() {
         <Route path={LOGIN_ENDPOINT} element={<LoginRegister />} />
         <Route path={NOT_FOUND_ENDPOINT} element={<NotFound />} />
         <Route path={PURCHASE_REQUESTS_ENDPOINT} element={<PurchaseRequests />} />
+        <Route path={`${QUOTATIONS_ENDPOINT}/:id`} element={<Quotations />} />
       </Route>
     </Routes>
   );
@@ -80,7 +81,8 @@ function AdminRoutes() {
         <Route path={CONTACTS_ENDPOINT} element={<Contacts />} />
         <Route path={PRODUCTS_ENDPOINT} element={<Products />} />
         <Route path={USERS_ENDPOINT} element={<Users />} />
-        <Route path={QUOTATIONS_ENDPOINT} element={<Quotations />} />
+        <Route path={PURCHASE_REQUESTS_ENDPOINT} element={<PurchaseRequests />} />
+        <Route path={`${QUOTATIONS_ENDPOINT}/:id`} element={<Quotations />} />
       </Route>
     </Routes>
   );

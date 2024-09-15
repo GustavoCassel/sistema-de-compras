@@ -22,22 +22,9 @@ export class PurchaseRequest {
   productId: string = "";
   product: Product | undefined = undefined;
   quantity: number = 0;
-  quotationIds: string[] = [];
   quotations: Quotation[] = [];
-  status: PurchaseRequestStatus = getPurchaseRequestStatus(this);
+  status: PurchaseRequestStatus | undefined = undefined;
   observations?: string | undefined = "";
-}
-
-function getPurchaseRequestStatus(purchaseRequest: PurchaseRequest): PurchaseRequestStatus {
-  if (purchaseRequest.quotationIds.length === 0) {
-    return PurchaseRequestStatus.Open;
-  }
-
-  if (purchaseRequest.quotationIds.length === NUMBER_OF_QUOTES_REQUIRED) {
-    return PurchaseRequestStatus.Quoted;
-  }
-
-  return PurchaseRequestStatus.Quoting;
 }
 
 class PurchaseRequestRepository extends FirebaseRepository<PurchaseRequest> {
@@ -56,12 +43,9 @@ class PurchaseRequestRepository extends FirebaseRepository<PurchaseRequest> {
   }
 
   async fullFillFirebaseUsers(purchaseRequests: PurchaseRequest[]): Promise<void> {
-    const requesterEmails = purchaseRequests.map((purchaseRequest) => purchaseRequest.requesterEmail);
-    const requesters = await firebaseUserRepository.getManyByField("email", requesterEmails);
-
-    purchaseRequests.forEach((purchaseRequest) => {
-      purchaseRequest.requester = requesters.find((requester) => requester.email === purchaseRequest.requesterEmail);
-    });
+    for (const purchaseRequest of purchaseRequests) {
+      await this.fullFillFirebaseUser(purchaseRequest);
+    }
   }
 
   async fullFillProduct(purchaseRequest: PurchaseRequest): Promise<void> {
@@ -83,10 +67,34 @@ class PurchaseRequestRepository extends FirebaseRepository<PurchaseRequest> {
     });
   }
 
-  async fullFillQuotations(purchaseRequest: PurchaseRequest): Promise<void> {
-    const quotations = await Promise.all(purchaseRequest.quotationIds.map((quotationId) => quotationRepository.getById(quotationId)));
+  async fullFillQuotationsSingle(purchaseRequest: PurchaseRequest): Promise<void> {
+    const quotations = await quotationRepository.getByField("purchaseRequestId", purchaseRequest.id);
 
-    purchaseRequest.quotations = quotations.filter((quotation) => quotation !== null) as Quotation[];
+    purchaseRequest.quotations = quotations;
+  }
+
+  async fullFillQuotations(purchaseRequests: PurchaseRequest[]): Promise<void> {
+    for (const purchaseRequest of purchaseRequests) {
+      await this.fullFillQuotationsSingle(purchaseRequest);
+    }
+  }
+
+  async fullFillStatusSingle(purchaseRequest: PurchaseRequest): Promise<void> {
+    const quotationsCount = await quotationRepository.countByField("purchaseRequestId", purchaseRequest.id);
+
+    if (quotationsCount === NUMBER_OF_QUOTES_REQUIRED) {
+      purchaseRequest.status = PurchaseRequestStatus.Quoted;
+    } else if (quotationsCount === 0) {
+      purchaseRequest.status = PurchaseRequestStatus.Open;
+    } else {
+      purchaseRequest.status = PurchaseRequestStatus.Quoting;
+    }
+  }
+
+  async fullFillStatus(purchaseRequests: PurchaseRequest[]): Promise<void> {
+    for (const purchaseRequest of purchaseRequests) {
+      await this.fullFillStatusSingle(purchaseRequest);
+    }
   }
 }
 

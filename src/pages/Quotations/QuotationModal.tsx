@@ -8,7 +8,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { z } from "zod";
 import Loading from "../../components/Loading";
-import { CrudOperation, DATE_FORMAT } from "../../data/constants";
+import { APP_CURRENCY_LOCALE_FORMAT, CrudOperation, DATE_FORMAT } from "../../data/constants";
 import { Quotation, quotationRepository } from "../../models/QuotationRepository";
 import { Supplier, supplierRepository } from "../../models/SupplierRepository";
 import { Toast } from "../../utils/Alerts";
@@ -20,6 +20,7 @@ type QuotationModalProps = {
   crudOperation: CrudOperation;
   quotation?: Quotation;
   updateTable: () => void;
+  purchaseRequestId: string;
 };
 
 const schema = z.object({
@@ -35,7 +36,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function QuotationModal({ visible, setVisible, crudOperation, quotation, updateTable }: QuotationModalProps) {
+export default function QuotationModal({ visible, setVisible, crudOperation, quotation, updateTable, purchaseRequestId }: QuotationModalProps) {
   const {
     register,
     handleSubmit,
@@ -91,6 +92,7 @@ export default function QuotationModal({ visible, setVisible, crudOperation, quo
     setFormDisabled(false);
     setButtonVisible(true);
     if (crudOperation === CrudOperation.Create) {
+      setValue("purchaseRequestId", purchaseRequestId);
       setSubmittingButtonText("Cadastrando...");
       setButtonText("Cadastrar");
       setHeaderText("Cadastrar Cotação");
@@ -137,8 +139,6 @@ export default function QuotationModal({ visible, setVisible, crudOperation, quo
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     const parsed = schema.parse(formData) as Quotation;
 
-    console.log(parsed);
-    return;
     try {
       if (crudOperation === CrudOperation.Delete) {
         await quotationRepository.delete(quotation!.id);
@@ -224,12 +224,11 @@ export default function QuotationModal({ visible, setVisible, crudOperation, quo
                     trigger("price");
                   }}
                   type="text"
-                  value={price}
                   placeholder=""
                   allowDecimals={true}
                   decimalsLimit={2}
                   allowNegativeValue={false}
-                  intlConfig={{ locale: "pt-BR", currency: "BRL" }}
+                  intlConfig={APP_CURRENCY_LOCALE_FORMAT}
                   isInvalid={!!errors.price}
                 />
                 <Form.Control.Feedback type="invalid">{errors.price?.message}</Form.Control.Feedback>
