@@ -49,16 +49,15 @@ export default function PurchaseRequests() {
 
       await purchaseRequestRepository.fullFillStatus(requests);
 
+      // (da mais antiga para a mais nova)
       requests = requests.sort((a, b) => {
         const dateA = moment(a.requestDate, DATE_FORMAT);
         const dateB = moment(b.requestDate, DATE_FORMAT);
 
         if (dateA.isBefore(dateB)) {
-          return 1;
-        }
-
-        if (dateA.isAfter(dateB)) {
           return -1;
+        } else if (dateA.isAfter(dateB)) {
+          return 1;
         }
 
         return 0;
