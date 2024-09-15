@@ -46,7 +46,7 @@ export default function Products() {
   return (
     <>
       <div className="d-flex justify-content-between">
-        <h2>Contatos</h2>
+        <h2>Produtos</h2>
         <Button variant="primary" onClick={() => showModal(CrudOperation.Create)}>
           <i className="bi bi-plus-square me-2" />
           Cadastrar
