@@ -29,7 +29,6 @@ const schema = z.object({
     .min(1, "Data da Solicitação é obrigatória")
     .refine((value) => moment(value, DATE_FORMAT).isValid(), { message: "Data inválida" }),
   supplierId: z.string().min(1, "Fornecedor é obrigatório"),
-  purchaseRequestId: z.string().min(1, "Requisição é obrigatória"),
   price: z.number().min(0.01, "Preço é obrigatório"),
   observations: z.string().optional(),
 });
@@ -92,7 +91,6 @@ export default function QuotationModal({ visible, setVisible, crudOperation, quo
     setFormDisabled(false);
     setButtonVisible(true);
     if (crudOperation === CrudOperation.Create) {
-      setValue("purchaseRequestId", purchaseRequestId);
       setSubmittingButtonText("Cadastrando...");
       setButtonText("Cadastrar");
       setHeaderText("Cadastrar Cotação");
@@ -138,6 +136,7 @@ export default function QuotationModal({ visible, setVisible, crudOperation, quo
 
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     const parsed = schema.parse(formData) as Quotation;
+    parsed.purchaseRequestId = purchaseRequestId;
 
     try {
       if (crudOperation === CrudOperation.Delete) {
@@ -187,11 +186,6 @@ export default function QuotationModal({ visible, setVisible, crudOperation, quo
               <FloatingLabel label="Data da Cotação" className="mb-3">
                 <Form.Control type="datetime" {...register("quotationDate")} isInvalid={!!errors.quotationDate} disabled />
                 <Form.Control.Feedback type="invalid">{errors.quotationDate?.message}</Form.Control.Feedback>
-              </FloatingLabel>
-
-              <FloatingLabel label="Requisição de Compra" className="mb-3">
-                <Form.Control type="text" {...register("purchaseRequestId")} isInvalid={!!errors.purchaseRequestId} disabled />
-                <Form.Control.Feedback type="invalid">{errors.purchaseRequestId?.message}</Form.Control.Feedback>
               </FloatingLabel>
 
               {loadingSuppliers ? (
