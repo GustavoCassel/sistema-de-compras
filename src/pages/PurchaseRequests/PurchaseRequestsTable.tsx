@@ -27,6 +27,7 @@ export default function PurchaseRequestsTable({ purchaseRequests, showModal }: P
           <th>Quantidade</th>
           <th>Status</th>
           <th>Observações</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>

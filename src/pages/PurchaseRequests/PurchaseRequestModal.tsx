@@ -69,7 +69,7 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
   async function loadProducts() {
     setLoadingProducts(true);
     try {
-      const products = await productRepository.getAll();
+      const products = await productRepository.getAllActive();
 
       setProducts(products);
     } finally {
@@ -140,8 +140,6 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
 
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     const parsed = schema.parse(formData) as PurchaseRequest;
-
-    console.log("pego do form", parsed.requestDate);
 
     try {
       if (crudOperation === CrudOperation.Delete) {
@@ -226,7 +224,7 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
               </FloatingLabel>
 
               <FloatingLabel label="Observações" className="mb-3">
-                <Form.Control as="textarea" {...register("observations")} isInvalid={!!errors.observations} />
+                <Form.Control as="textarea" placeholder="" {...register("observations")} isInvalid={!!errors.observations} />
                 <Form.Control.Feedback type="invalid">{errors.observations?.message}</Form.Control.Feedback>
               </FloatingLabel>
             </Container>

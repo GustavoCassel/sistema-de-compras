@@ -199,14 +199,7 @@ export default function ProductModal({ visible, setVisible, crudOperation, produ
             </FloatingLabel>
 
             <FloatingLabel label="Observações" className="mb-3">
-              <Form.Control
-                as="textarea"
-                placeholder=""
-                isInvalid={!!errors.observations}
-                {...register("observations")}
-                // adjust the height of the textarea
-                style={{ height: "100px" }}
-              />
+              <Form.Control as="textarea" placeholder="" isInvalid={!!errors.observations} {...register("observations")} />
               <Form.Control.Feedback type="invalid">{errors.observations?.message}</Form.Control.Feedback>
             </FloatingLabel>
           </fieldset>

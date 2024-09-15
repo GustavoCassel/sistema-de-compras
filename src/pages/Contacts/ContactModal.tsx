@@ -117,7 +117,7 @@ export default function ContactModal({ visible, setVisible, crudOperation, conta
       return;
     }
 
-    const suppliers = await supplierRepository.getAll();
+    const suppliers = await supplierRepository.getAllActive();
 
     setSuppliers(suppliers);
   }
