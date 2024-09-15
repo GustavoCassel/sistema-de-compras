@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import CurrencyInput, { CurrencyInputOnChangeValues } from "react-currency-input-field";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { z } from "zod";
@@ -29,7 +30,10 @@ const schema = z.object({
     .refine((value) => moment(value, DATE_FORMAT).isValid(), { message: "Data inválida" }),
   requesterEmail: z.string().min(1, "Solicitante é obrigatório"),
   productId: z.string().min(1, "Produto é obrigatório"),
-  quantity: z.coerce.number().min(1, "Quantidade é obrigatória"),
+  quantity: z.coerce
+    .string()
+    .transform((val) => parseFloat(val.replace(",", ".")))
+    .refine((value) => value > 0, { message: "Quantidade deve ser maior que zero" }),
   observations: z.string().optional(),
 });
 
@@ -215,7 +219,23 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
               )}
 
               <FloatingLabel label="Quantidade" className="mb-3">
-                <Form.Control type="number" {...register("quantity")} isInvalid={!!errors.quantity} />
+                <Controller
+                  control={control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <Form.Control
+                      as={CurrencyInput}
+                      placeholder=""
+                      value={field.value}
+                      decimalScale={2}
+                      decimalsLimit={2}
+                      isInvalid={!!errors.quantity}
+                      onValueChange={(_value: string | undefined, _name?: string, values?: CurrencyInputOnChangeValues) => {
+                        field.onChange(values?.value);
+                      }}
+                    />
+                  )}
+                />
                 <Form.Control.Feedback type="invalid">{errors.quantity?.message}</Form.Control.Feedback>
               </FloatingLabel>
 
