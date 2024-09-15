@@ -222,6 +222,7 @@ export default function QuotationModal({ visible, setVisible, crudOperation, quo
                       as={CurrencyInput}
                       intlConfig={APP_CURRENCY_LOCALE_FORMAT}
                       placeholder=""
+                      decimalScale={2}
                       value={field.value}
                       isInvalid={!!errors.price}
                       onValueChange={(_value: string | undefined, _name?: string, values?: CurrencyInputOnChangeValues) => {
