@@ -29,7 +29,10 @@ const schema = z.object({
     .min(1, "Data da Solicitação é obrigatória")
     .refine((value) => moment(value, DATE_FORMAT).isValid(), { message: "Data inválida" }),
   supplierId: z.string().min(1, "Fornecedor é obrigatório"),
-  price: z.number().min(0.01, "Preço é obrigatório"),
+  price: z.coerce
+    .string()
+    .transform((val) => parseFloat(val.replace(",", ".")))
+    .refine((value) => value > 0, { message: "Preço deve ser maior que zero" }),
   observations: z.string().optional(),
 });
 
@@ -211,19 +214,21 @@ export default function QuotationModal({ visible, setVisible, crudOperation, quo
               )}
 
               <FloatingLabel label="Preço" className="mb-3">
-                <Form.Control
-                  as={CurrencyInput}
-                  onValueChange={(_value: string | undefined, _name?: string, values?: CurrencyInputOnChangeValues) => {
-                    setValue("price", values?.float || 0);
-                    trigger("price");
-                  }}
-                  type="text"
-                  placeholder=""
-                  allowDecimals={true}
-                  decimalsLimit={2}
-                  allowNegativeValue={false}
-                  intlConfig={APP_CURRENCY_LOCALE_FORMAT}
-                  isInvalid={!!errors.price}
+                <Controller
+                  control={control}
+                  name="price"
+                  render={({ field }) => (
+                    <Form.Control
+                      as={CurrencyInput}
+                      intlConfig={APP_CURRENCY_LOCALE_FORMAT}
+                      placeholder=""
+                      value={field.value}
+                      isInvalid={!!errors.price}
+                      onValueChange={(_value: string | undefined, _name?: string, values?: CurrencyInputOnChangeValues) => {
+                        field.onChange(values?.value);
+                      }}
+                    />
+                  )}
                 />
                 <Form.Control.Feedback type="invalid">{errors.price?.message}</Form.Control.Feedback>
               </FloatingLabel>
