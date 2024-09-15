@@ -11,7 +11,7 @@ export class Quotation {
   supplier: Supplier | undefined = undefined;
   quotationDate: string = moment().format("YYYY-MM-DD");
   price: number = 0;
-  observations?: string = "";
+  observations?: string | undefined = "";
 }
 
 class QuotationRepository extends FirebaseRepository<Quotation> {

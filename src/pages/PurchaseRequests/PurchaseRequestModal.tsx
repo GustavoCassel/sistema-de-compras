@@ -103,20 +103,20 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
     } else if (crudOperation === CrudOperation.Update) {
       setSubmittingButtonText("Atualizando...");
       setButtonText("Atualizar");
-      setHeaderText("Atualizar Produto");
+      setHeaderText("Atualizar Solicitação de Compra");
       setHeaderIcon("bi bi-pencil-square");
       setFormColor("warning");
     } else if (crudOperation === CrudOperation.Delete) {
       setSubmittingButtonText("Excluindo...");
       setFormDisabled(true);
       setButtonText("Confirma exclusão?");
-      setHeaderText("Excluir Produto");
+      setHeaderText("Excluir Solicitação de Compra");
       setHeaderIcon("bi bi-trash");
       setFormColor("danger");
     } else if (crudOperation === CrudOperation.Read) {
       setFormDisabled(true);
       setButtonVisible(false);
-      setHeaderText("Detalhes do Produto");
+      setHeaderText("Detalhes da Solicitação de Compra");
       setHeaderIcon("bi bi-info-square");
       setFormColor("info");
     } else {

@@ -25,7 +25,7 @@ export class PurchaseRequest {
   quotationIds: string[] = [];
   quotations: Quotation[] = [];
   status: PurchaseRequestStatus = getPurchaseRequestStatus(this);
-  observations?: string = undefined;
+  observations?: string | undefined = "";
 }
 
 function getPurchaseRequestStatus(purchaseRequest: PurchaseRequest): PurchaseRequestStatus {

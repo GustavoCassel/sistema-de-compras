@@ -21,7 +21,7 @@ export class Product {
   id: string = "";
   name: string = "";
   description: string = "";
-  observations: string = "";
+  observations?: string | undefined = "";
   active: boolean = true;
   measurementUnit: MeasurementUnit = MeasurementUnit.Unit;
 }
