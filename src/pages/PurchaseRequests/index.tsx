@@ -30,7 +30,7 @@ export default function PurchaseRequests() {
     setLoading(true);
     try {
       if (!currentFirebaseUser) {
-        throw new Error("Usuário não autenticado");
+        return;
       }
 
       let requests: PurchaseRequest[];
@@ -50,7 +50,7 @@ export default function PurchaseRequests() {
       const err = error as Error;
       Swal.fire({
         icon: "error",
-        title: "Erro ao carregar contatos",
+        title: "Erro ao carregar requisições de compra",
         html: err.message,
       });
     } finally {

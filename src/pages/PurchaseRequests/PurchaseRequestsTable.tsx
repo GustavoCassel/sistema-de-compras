@@ -1,11 +1,9 @@
+import { Badge } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Table from "react-bootstrap/Table";
-import activeImg from "../../assets/green_square.png";
-import inactiveImg from "../../assets/red_square.png";
 import { CrudOperation } from "../../data/constants";
 import { PurchaseRequest } from "../../models/PurchaseRequestRepository";
-import { Badge } from "react-bootstrap";
 
 export type PurchaseRequestsTableProps = {
   purchaseRequests: PurchaseRequest[];
@@ -48,6 +46,7 @@ export default function PurchaseRequestsTable({ purchaseRequests, showModal }: P
                 <Button variant="info" className="bi bi-info-square" title="Visualizar" onClick={() => showModal(CrudOperation.Read, purchaseRequest)} />
                 <Button variant="warning" className="bi bi-pencil-square" title="Editar" onClick={() => showModal(CrudOperation.Update, purchaseRequest)} />
                 <Button variant="danger" className="bi bi-trash" title="Excluir" onClick={() => showModal(CrudOperation.Delete, purchaseRequest)} />
+                <Button variant="success" className="bi bi-currency-dollar" title="Cotações" onClick={() => {}} />
               </ButtonGroup>
             </td>
           </tr>
