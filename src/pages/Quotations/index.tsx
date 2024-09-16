@@ -29,6 +29,15 @@ export default function Quotations() {
   }
 
   async function showModal(crudOperation: CrudOperation, quotation?: Quotation) {
+    if (!currentFirebaseUser?.isAdmin && (crudOperation === CrudOperation.Update || crudOperation === CrudOperation.Delete)) {
+      Swal.fire({
+        icon: "error",
+        title: "Acesso negado",
+        html: "Você não tem permissão para acessar esta funcionalidade",
+      });
+      return;
+    }
+
     if (crudOperation === CrudOperation.Create && purchaseRequest) {
       await purchaseRequestRepository.fullFillStatusSingle(purchaseRequest);
 
