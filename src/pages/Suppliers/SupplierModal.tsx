@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import { z } from "zod";
 import { CEP_MASK, CEP_REGEX, CNPJ_MASK, CPF_MASK, CrudOperation } from "../../data/constants";
 import { Supplier, SUPPLIER_TYPES, supplierRepository, SupplierType } from "../../models/SupplierRepository";
+import ViaCepService from "../../services/ViaCepService";
 import { Toast } from "../../utils/Alerts";
 import SupplierContactsTable from "./SupplierContactsTable";
 
@@ -57,6 +58,58 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
   const [formDisabled, setFormDisabled] = useState(false);
 
   const watchSupplierType = watch("supplierType");
+  const cep = watch("cep");
+
+  useEffect(() => {
+    if (crudOperation !== CrudOperation.Create) {
+      return;
+    }
+
+    fullFillAddress();
+  }, [cep]);
+
+  async function fullFillAddress() {
+    const onlyNumbers = cep.replace(/\D/g, "");
+    if (!onlyNumbers || onlyNumbers.length !== 8) {
+      return;
+    }
+
+    const result = await Swal.fire({
+      icon: "question",
+      title: "Preencher endereço automaticamente?",
+      text: "Deseja preencher o endereço automaticamente?",
+      showCancelButton: true,
+      confirmButtonText: "Sim",
+      cancelButtonText: "Não",
+    });
+
+    if (result.isDismissed) {
+      return;
+    }
+
+    try {
+      const address = await ViaCepService.getAddress(onlyNumbers);
+
+      setValue("city", address.localidade);
+      trigger("city");
+      setValue("state", address.uf);
+      trigger("state");
+      setValue("cep", address.cep);
+      trigger("cep");
+
+      Toast.fire({
+        icon: "success",
+        title: "Endereço preenchido automaticamente",
+      });
+    } catch (error) {
+      const err = error as Error;
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao preencher endereço",
+        text: err.message,
+      });
+    }
+  }
 
   useEffect(() => {
     if (!visible) {
@@ -182,6 +235,11 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
               <Form.Control.Feedback type="invalid">{errors.name?.message}</Form.Control.Feedback>
             </FloatingLabel>
 
+            <FloatingLabel label="CEP" className="mb-3">
+              <Form.Control as={ReactInputMask} type="text" placeholder="" mask={CEP_MASK} maskChar={null} isInvalid={!!errors.cep} {...register("cep")} />
+              <Form.Control.Feedback type="invalid">{errors.cep?.message}</Form.Control.Feedback>
+            </FloatingLabel>
+
             <FloatingLabel label="Cidade" className="mb-3">
               <Form.Control type="text" placeholder="" isInvalid={!!errors.city} {...register("city")} />
               <Form.Control.Feedback type="invalid">{errors.city?.message}</Form.Control.Feedback>
@@ -231,11 +289,6 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
                 {...register("document")}
               />
               <Form.Control.Feedback type="invalid">{errors.document?.message}</Form.Control.Feedback>
-            </FloatingLabel>
-
-            <FloatingLabel label="CEP" className="mb-3">
-              <Form.Control as={ReactInputMask} type="text" placeholder="" mask={CEP_MASK} maskChar={null} isInvalid={!!errors.cep} {...register("cep")} />
-              <Form.Control.Feedback type="invalid">{errors.cep?.message}</Form.Control.Feedback>
             </FloatingLabel>
 
             {supplier && (
