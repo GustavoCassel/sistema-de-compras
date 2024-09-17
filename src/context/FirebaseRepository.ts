@@ -30,6 +30,14 @@ export abstract class FirebaseRepository<T extends TFirestoreEntity> {
     await deleteDoc(docRef);
   }
 
+  async deleteByField<K extends keyof T>(fieldName: K, fieldValue: T[K]): Promise<void> {
+    const items = await this.getByField(fieldName, fieldValue);
+
+    for (const item of items) {
+      await this.delete(item.id!);
+    }
+  }
+
   async getAll(): Promise<T[]> {
     const querySnapshot = await getDocs(this.collection);
     const items: T[] = [];
