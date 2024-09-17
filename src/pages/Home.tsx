@@ -14,6 +14,7 @@ export default function Home() {
       <h6>Cadastro de produtos</h6>
       <h6>Acesso de administrador e usuário</h6>
       <h6>Cadastro de usuários (controle bloqueado/admin)</h6>
+      <h6>Cadastro de solicitações de compra</h6>
       <h6>Cadastro de cotações</h6>
 
       <h3>Problemas conhecidos</h3>
