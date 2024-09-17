@@ -2,18 +2,38 @@ import { Badge } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Table from "react-bootstrap/Table";
-import { CrudOperation, QUOTATIONS_ENDPOINT } from "../../data/constants";
-import { PurchaseRequest } from "../../models/PurchaseRequestRepository";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { CrudOperation, QUOTATIONS_ENDPOINT } from "../../data/constants";
+import { FirebaseUser } from "../../models/FirebaseUserRepository";
+import { PurchaseRequest, PurchaseRequestStatus } from "../../models/PurchaseRequestRepository";
 
 export type PurchaseRequestsTableProps = {
   purchaseRequests: PurchaseRequest[];
   showRequester: boolean;
+  firebaseUser: FirebaseUser | null;
   showModal: (crudOperation: CrudOperation, purchaseRequest?: PurchaseRequest) => void;
 };
 
-export default function PurchaseRequestsTable({ purchaseRequests, showRequester, showModal }: PurchaseRequestsTableProps) {
+export default function PurchaseRequestsTable({ purchaseRequests, firebaseUser, showRequester, showModal }: PurchaseRequestsTableProps) {
   const navigate = useNavigate();
+
+  function handleQuotationsClick(purchaseRequest: PurchaseRequest) {
+    if (!firebaseUser?.isAdmin && purchaseRequest.status === PurchaseRequestStatus.Open) {
+      Swal.fire({
+        title: "Nenhuma cotação encontrada",
+        text: "A solicitação de compra precisa ter alguma cotação para visualizar",
+        icon: "info",
+      });
+      return;
+    }
+
+    navigate(`${QUOTATIONS_ENDPOINT}/${purchaseRequest.id}`);
+  }
+
+  if (!firebaseUser) {
+    return <p>Usuário não encontrado</p>;
+  }
 
   if (!purchaseRequests || purchaseRequests.length === 0) {
     return <p>Nenhuma solicitação de compra encontrada</p>;
@@ -57,7 +77,7 @@ export default function PurchaseRequestsTable({ purchaseRequests, showRequester,
                   className="bi bi-currency-dollar"
                   title="Cotações"
                   onClick={() => {
-                    navigate(`${QUOTATIONS_ENDPOINT}/${purchaseRequest.id}`);
+                    handleQuotationsClick(purchaseRequest);
                   }}
                 />
               </ButtonGroup>

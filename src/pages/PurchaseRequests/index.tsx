@@ -97,7 +97,12 @@ export default function PurchaseRequests() {
       {loading ? (
         <Loading />
       ) : (
-        <PurchaseRequestsTable showRequester={!!currentFirebaseUser?.isAdmin} purchaseRequests={purchaseRequests} showModal={showModal} />
+        <PurchaseRequestsTable
+          showRequester={!!currentFirebaseUser?.isAdmin}
+          purchaseRequests={purchaseRequests}
+          showModal={showModal}
+          firebaseUser={currentFirebaseUser}
+        />
       )}
     </>
   );
