@@ -86,9 +86,7 @@ export default function Auth() {
       text: "Redirecionando para a página inicial.",
     });
 
-    setTimeout(() => {
-      navigate(HOME_ENDPOINT);
-    }, 1000);
+    navigate(HOME_ENDPOINT);
   };
 
   function toggleMode() {
@@ -103,18 +101,18 @@ export default function Auth() {
           <h2 className="text-center mb-3">{isLoginMode ? "Login" : "Registrar"}</h2>
           <Form>
             <FloatingLabel controlId="floatingInput" label="Digite seu email" className="mb-3">
-              <Form.Control type="email" placeholder="" isInvalid={!!errors.email} {...register("email")} />
+              <Form.Control type="email" placeholder="" isInvalid={!!errors.email} {...register("email")} disabled={isSubmitting} />
               <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
             </FloatingLabel>
 
             <FloatingLabel controlId="floatingPassword" label="Digite sua senha" className="mb-3">
-              <Form.Control type="password" placeholder="" isInvalid={!!errors.password} {...register("password")} />
+              <Form.Control type="password" placeholder="" isInvalid={!!errors.password} {...register("password")} disabled={isSubmitting} />
               <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
             </FloatingLabel>
 
             {!isLoginMode && (
               <FloatingLabel controlId="floatingConfirmPassword" label="Confirme sua senha" className="mb-3">
-                <Form.Control type="password" placeholder="" isInvalid={!!errors.confirmPassword} {...register("confirmPassword")} />
+                <Form.Control type="password" placeholder="" isInvalid={!!errors.confirmPassword} {...register("confirmPassword")} disabled={isSubmitting} />
                 <Form.Control.Feedback type="invalid">{errors.confirmPassword?.message}</Form.Control.Feedback>
               </FloatingLabel>
             )}
