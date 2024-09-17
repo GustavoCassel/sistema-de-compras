@@ -100,36 +100,38 @@ export default function Auth() {
         <Col md="4">
           <h2 className="text-center mb-3">{isLoginMode ? "Login" : "Registrar"}</h2>
           <Form>
-            <FloatingLabel controlId="floatingInput" label="Digite seu email" className="mb-3">
-              <Form.Control type="email" placeholder="" isInvalid={!!errors.email} {...register("email")} disabled={isSubmitting} />
-              <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
-            </FloatingLabel>
-
-            <FloatingLabel controlId="floatingPassword" label="Digite sua senha" className="mb-3">
-              <Form.Control type="password" placeholder="" isInvalid={!!errors.password} {...register("password")} disabled={isSubmitting} />
-              <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
-            </FloatingLabel>
-
-            {!isLoginMode && (
-              <FloatingLabel controlId="floatingConfirmPassword" label="Confirme sua senha" className="mb-3">
-                <Form.Control type="password" placeholder="" isInvalid={!!errors.confirmPassword} {...register("confirmPassword")} disabled={isSubmitting} />
-                <Form.Control.Feedback type="invalid">{errors.confirmPassword?.message}</Form.Control.Feedback>
+            <fieldset disabled={isSubmitting}>
+              <FloatingLabel controlId="floatingInput" label="Digite seu email" className="mb-3">
+                <Form.Control type="email" placeholder="" isInvalid={!!errors.email} {...register("email")} />
+                <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
               </FloatingLabel>
-            )}
 
-            {buttonVisible && (
-              <>
-                <Button variant="primary" type="submit" className="w-100" disabled={isSubmitting} onClick={handleSubmit(onSubmit)}>
-                  {isSubmitting ? (isLoginMode ? "Entrando..." : "Registrando...") : isLoginMode ? "Entrar" : "Registrar"}
-                </Button>
-                <Form.Control.Feedback type="invalid" className="d-block mt-2">
-                  {errors.root?.message}
-                </Form.Control.Feedback>
-                <Button variant="link" className="w-100 mt-3" onClick={toggleMode}>
-                  {isLoginMode ? "Criar uma conta" : "Já tem uma conta? Entre aqui"}
-                </Button>
-              </>
-            )}
+              <FloatingLabel controlId="floatingPassword" label="Digite sua senha" className="mb-3">
+                <Form.Control type="password" placeholder="" isInvalid={!!errors.password} {...register("password")} />
+                <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
+              </FloatingLabel>
+
+              {!isLoginMode && (
+                <FloatingLabel controlId="floatingConfirmPassword" label="Confirme sua senha" className="mb-3">
+                  <Form.Control type="password" placeholder="" isInvalid={!!errors.confirmPassword} {...register("confirmPassword")} />
+                  <Form.Control.Feedback type="invalid">{errors.confirmPassword?.message}</Form.Control.Feedback>
+                </FloatingLabel>
+              )}
+
+              {buttonVisible && (
+                <>
+                  <Button variant="primary" type="submit" className="w-100" onClick={handleSubmit(onSubmit)}>
+                    {isSubmitting ? (isLoginMode ? "Entrando..." : "Registrando...") : isLoginMode ? "Entrar" : "Registrar"}
+                  </Button>
+                  <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                    {errors.root?.message}
+                  </Form.Control.Feedback>
+                  <Button variant="link" className="w-100 mt-3" onClick={toggleMode}>
+                    {isLoginMode ? "Criar uma conta" : "Já tem uma conta? Entre aqui"}
+                  </Button>
+                </>
+              )}
+            </fieldset>
           </Form>
         </Col>
       </Row>
