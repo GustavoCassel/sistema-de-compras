@@ -8,6 +8,7 @@ import ReactInputMask from "react-input-mask";
 import Swal from "sweetalert2";
 import { z } from "zod";
 import { CEP_MASK, CEP_REGEX, CNPJ_MASK, CPF_MASK, CrudOperation } from "../../data/constants";
+import { contactRepository } from "../../models/ContactRepository";
 import { Supplier, SUPPLIER_TYPES, supplierRepository, SupplierType } from "../../models/SupplierRepository";
 import ViaCepService from "../../services/ViaCepService";
 import { Toast } from "../../utils/Alerts";
@@ -173,6 +174,20 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
 
     try {
       if (crudOperation === CrudOperation.Delete) {
+        const result = await Swal.fire({
+          icon: "warning",
+          title: "Exclusão de Contatos vinculados",
+          text: "Ao excluir esse fornecedor, todos os contatos relacionados também serão excluídos. Deseja continuar?",
+          showCancelButton: true,
+          confirmButtonText: "Sim, excluir",
+          cancelButtonText: "Cancelar",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        await contactRepository.deleteByField("supplierId", supplier!.id);
         await supplierRepository.delete(supplier!.id);
       } else if (crudOperation === CrudOperation.Create) {
         await supplierRepository.create(parsedSupplier);
