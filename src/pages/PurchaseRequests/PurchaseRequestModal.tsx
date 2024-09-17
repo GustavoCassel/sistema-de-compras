@@ -13,6 +13,7 @@ import Loading from "../../components/Loading";
 import { CrudOperation, DATE_FORMAT } from "../../data/constants";
 import { Product, productRepository } from "../../models/ProductRepository";
 import { PurchaseRequest, purchaseRequestRepository } from "../../models/PurchaseRequestRepository";
+import { quotationRepository } from "../../models/QuotationRepository";
 import { Toast } from "../../utils/Alerts";
 
 type PurchaseRequestModalProps = {
@@ -143,6 +144,20 @@ export default function PurchaseRequestModal({ visible, setVisible, crudOperatio
 
     try {
       if (crudOperation === CrudOperation.Delete) {
+        const result = await Swal.fire({
+          icon: "warning",
+          title: "Exclusão de Cotações vinculadas",
+          text: "Ao excluir essa solicitação de compra, todas as cotações relacionadas serão excluídas. Deseja continuar?",
+          showCancelButton: true,
+          confirmButtonText: "Sim, excluir",
+          cancelButtonText: "Cancelar",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        await quotationRepository.deleteByField("purchaseRequestId", purchaseRequest!.id);
         await purchaseRequestRepository.delete(purchaseRequest!.id);
       } else if (crudOperation === CrudOperation.Create) {
         await purchaseRequestRepository.create(parsed);
