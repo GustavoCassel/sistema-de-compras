@@ -1,13 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { Container, FloatingLabel, Form } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import { Button, Container, FloatingLabel, Form, Modal } from "react-bootstrap";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import ReactInputMask from "react-input-mask";
 import Swal from "sweetalert2";
 import { z } from "zod";
-import { CEP_MASK, CEP_REGEX, CNPJ_MASK, CPF_MASK, CrudOperation } from "../../data/constants";
+import { CEP_MASK, CEP_REGEX, CNPJ_MASK, CNPJ_REGEX, CPF_MASK, CPF_REGEX, CrudOperation } from "../../data/constants";
 import { contactRepository } from "../../models/ContactRepository";
 import { Supplier, SUPPLIER_TYPES, supplierRepository, SupplierType } from "../../models/SupplierRepository";
 import ViaCepService from "../../services/ViaCepService";
@@ -22,16 +20,35 @@ type SupplierModalProps = {
   updateSupplierTable: () => void;
 };
 
-// TODO: configure validation schema and the input mask for the document field, considering the supplierType
-const schema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
-  active: z.boolean(),
-  city: z.string().min(1, "Cidade é obrigatória"),
-  state: z.string().regex(/^[A-Z]{2}$/, "Somente sigla do estado"),
-  document: z.string(),
-  cep: z.string().regex(CEP_REGEX, "CEP inválido"),
-  supplierType: z.nativeEnum(SupplierType, { message: "Tipo de fornecedor inválido" }),
-});
+const schema = z
+  .object({
+    name: z.string().min(1, "Nome é obrigatório"),
+    active: z.boolean(),
+    city: z.string().min(1, "Cidade é obrigatória"),
+    state: z.string().regex(/^[A-Z]{2}$/, "Somente sigla do estado"),
+    document: z.string().min(1, "Documento é obrigatório"),
+    cep: z.string().regex(CEP_REGEX, "CEP inválido"),
+    supplierType: z.nativeEnum(SupplierType, { message: "Tipo de fornecedor inválido" }),
+  })
+  .superRefine((data, ctx) => {
+    const { supplierType, document } = data;
+
+    if (supplierType === SupplierType.Physical && !CPF_REGEX.test(document)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Documento inválido para CPF",
+        path: ["document"],
+      });
+    }
+
+    if (supplierType === SupplierType.Legal && !CNPJ_REGEX.test(document)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Documento inválido para CNPJ",
+        path: ["document"],
+      });
+    }
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -59,6 +76,7 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
   const [formDisabled, setFormDisabled] = useState(false);
 
   const watchSupplierType = watch("supplierType");
+  const document = watch("document");
   const cep = watch("cep");
 
   useEffect(() => {
@@ -68,6 +86,18 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
 
     fullFillAddress();
   }, [cep]);
+
+  useEffect(() => {
+    if (!visible) {
+      return;
+    }
+
+    if (!document) {
+      return;
+    }
+
+    setValue("document", "", { shouldValidate: true });
+  }, [watchSupplierType]);
 
   async function fullFillAddress() {
     const onlyNumbers = cep.replace(/\D/g, "");
