@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, Table } from "react-bootstrap";
 import { CrudOperation, formatValue } from "../../data/constants";
 import { Quotation } from "../../models/QuotationRepository";
+import { useEffect, useState } from "react";
 
 export type QuotationsTableProps = {
   quotations: Quotation[];
@@ -8,6 +9,27 @@ export type QuotationsTableProps = {
 };
 
 export default function QuotationsTable({ quotations, showModal }: QuotationsTableProps) {
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(0);
+
+  useEffect(() => {
+    const prices: number[] = quotations.map((q) => q.price);
+    setMinPrice(Math.min(...prices));
+    setMaxPrice(Math.max(...prices));
+  }, [quotations]);
+
+  function calculateRowColor(quotation: Quotation): string {
+    if (quotation.price === minPrice) {
+      return "lightgreen";
+    }
+
+    if (quotation.price === maxPrice) {
+      return "lightcoral";
+    }
+
+    return "lightblue";
+  }
+
   if (!quotations || quotations.length === 0) {
     return <p>Nenhuma cotação encontrada</p>;
   }
@@ -28,7 +50,13 @@ export default function QuotationsTable({ quotations, showModal }: QuotationsTab
           <tr key={quotation.id} style={{ verticalAlign: "middle" }}>
             <td>{quotation.quotationDate}</td>
             <td>{quotation.supplier?.name}</td>
-            <td>{formatValue(quotation.price)}</td>
+            <td
+              style={{
+                backgroundColor: calculateRowColor(quotation),
+              }}
+            >
+              {formatValue(quotation.price)}
+            </td>
             <td>{quotation.observations}</td>
             <td>
               <ButtonGroup>
