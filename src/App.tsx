@@ -48,6 +48,10 @@ export default function App() {
 
   function toggleDarkMode() {
     setIsDarkMode((prev) => !prev);
+    if (isDarkMode) {
+      // to reload the sweetalert2 default theme
+      window.location.reload();
+    }
   }
 
   useEffect(() => {
@@ -73,7 +77,7 @@ export default function App() {
     setUser(firebaseUser);
   }
 
-  function adjustDarkMode() {
+  async function adjustDarkMode() {
     const htmlElement = document.querySelector("html");
 
     if (!htmlElement) {
@@ -82,6 +86,14 @@ export default function App() {
 
     htmlElement.setAttribute("data-theme", isDarkMode ? "dark" : "light");
     htmlElement.setAttribute("data-bs-theme", isDarkMode ? "dark" : "light");
+
+    if (isDarkMode) {
+      // @ts-ignore
+      await import("@sweetalert2/themes/dark/dark.css");
+    } else {
+      // @ts-ignore
+      await import("@sweetalert2/themes/default/default.css");
+    }
   }
 
   return (
