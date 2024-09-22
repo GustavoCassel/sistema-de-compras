@@ -4,7 +4,6 @@ import { User } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import "./App.css";
 import { auth, navigateByLoginState } from "./context/FirebaseContext";
 import {
   CONTACTS_ENDPOINT,
