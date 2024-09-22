@@ -4,6 +4,7 @@ import { IntlConfig } from "react-currency-input-field/dist/components/CurrencyI
 // Endpoints
 export const HOME_ENDPOINT: string = "/";
 export const LOGIN_ENDPOINT: string = "/login-register";
+export const LOGOUT_ENDPOINT: string = "/logout";
 export const NOT_FOUND_ENDPOINT: string = "*";
 export const USERS_ENDPOINT: string = "/users";
 export const SUPPLIERS_ENDPOINT: string = "/suppliers";

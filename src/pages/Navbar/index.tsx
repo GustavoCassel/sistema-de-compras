@@ -1,21 +1,22 @@
-import { signOut } from "firebase/auth";
 import { useContext } from "react";
 import { Badge, Container, Nav, Navbar, NavbarText } from "react-bootstrap";
 import { NavLink, Outlet } from "react-router-dom";
 import { DarkThemeContext, FirebaseUserContext } from "../../App";
 import { Button } from "../../components";
-import { auth } from "../../context/FirebaseContext";
-import { CONTACTS_ENDPOINT, HOME_ENDPOINT, PRODUCTS_ENDPOINT, PURCHASE_REQUESTS_ENDPOINT, SUPPLIERS_ENDPOINT, USERS_ENDPOINT } from "../../data/constants";
+import {
+  CONTACTS_ENDPOINT,
+  HOME_ENDPOINT,
+  LOGOUT_ENDPOINT,
+  PRODUCTS_ENDPOINT,
+  PURCHASE_REQUESTS_ENDPOINT,
+  SUPPLIERS_ENDPOINT,
+  USERS_ENDPOINT,
+} from "../../data/constants";
 import "./styles.css";
 
 export default function AppHeader() {
   const user = useContext(FirebaseUserContext);
   const { isDarkMode, toggleDarkMode } = useContext(DarkThemeContext);
-
-  function handleSignOut() {
-    signOut(auth);
-    window.location.reload();
-  }
 
   return (
     <>
@@ -40,7 +41,7 @@ export default function AppHeader() {
                     </NavbarText>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link as={NavLink} to={HOME_ENDPOINT} onClick={handleSignOut} className="d-flex align-items-center">
+                    <Nav.Link as={NavLink} to={LOGOUT_ENDPOINT} className="d-flex align-items-center">
                       <i className="bi bi-box-arrow-right me-2 ms-2" />
                       Sair
                     </Nav.Link>

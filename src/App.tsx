@@ -10,6 +10,7 @@ import {
   CONTACTS_ENDPOINT,
   HOME_ENDPOINT,
   LOGIN_ENDPOINT,
+  LOGOUT_ENDPOINT,
   NOT_FOUND_ENDPOINT,
   PRODUCTS_ENDPOINT,
   PURCHASE_REQUESTS_ENDPOINT,
@@ -21,6 +22,7 @@ import { FirebaseUser, firebaseUserRepository } from "./models/FirebaseUserRepos
 import Contacts from "./pages/Contacts";
 import Home from "./pages/Home";
 import LoginRegister from "./pages/LoginRegister";
+import Logout from "./pages/Logout";
 import Navbar from "./pages/Navbar";
 import NotFound from "./pages/NotFound";
 import Products from "./pages/Products";
@@ -100,6 +102,7 @@ function UserRoutes() {
       <Route path={HOME_ENDPOINT} element={<Navbar />}>
         <Route index element={<Home />} />
         <Route path={LOGIN_ENDPOINT} element={<LoginRegister />} />
+        <Route path={LOGOUT_ENDPOINT} element={<Logout />} />
         <Route path={NOT_FOUND_ENDPOINT} element={<NotFound />} />
         <Route path={PURCHASE_REQUESTS_ENDPOINT} element={<PurchaseRequests />} />
         <Route path={`${QUOTATIONS_ENDPOINT}/:id`} element={<Quotations />} />
@@ -114,6 +117,7 @@ function AdminRoutes() {
       <Route path={HOME_ENDPOINT} element={<Navbar />}>
         <Route index element={<Home />} />
         <Route path={LOGIN_ENDPOINT} element={<LoginRegister />} />
+        <Route path={LOGOUT_ENDPOINT} element={<Logout />} />
         <Route path={NOT_FOUND_ENDPOINT} element={<NotFound />} />
         <Route path={SUPPLIERS_ENDPOINT} element={<Suppliers />} />
         <Route path={CONTACTS_ENDPOINT} element={<Contacts />} />
