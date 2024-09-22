@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
+import ExportCsvButton from "../../components/ExportCsvButton";
 import Loading from "../../components/Loading";
 import { CrudOperation } from "../../data/constants";
 import { Product, productRepository } from "../../models/ProductRepository";
@@ -53,6 +54,7 @@ export default function Products() {
       </div>
       <ProductModal visible={modalVisible} setVisible={setModalVisible} crudOperation={crudOperation} product={product} updateTable={updateTable} />
       {loading ? <Loading /> : <ProductsTable products={products} showModal={showModal} />}
+      {products.length !== 0 && <ExportCsvButton data={products} filename="produtos.csv" />}
     </>
   );
 }

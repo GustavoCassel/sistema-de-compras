@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
+import ExportCsvButton from "../../components/ExportCsvButton";
 import Loading from "../../components/Loading";
 import { CrudOperation } from "../../data/constants";
 import { PurchaseRequest, purchaseRequestRepository, PurchaseRequestStatus } from "../../models/PurchaseRequestRepository";
@@ -120,6 +121,7 @@ export default function Quotations() {
         purchaseRequestId={purchaseRequestId}
       />
       {loading ? <Loading /> : <QuotationsTable quotations={quotations} showModal={showModal} />}
+      {quotations.length !== 0 && <ExportCsvButton data={quotations} filename="cotacoes.csv" />}
     </>
   );
 }

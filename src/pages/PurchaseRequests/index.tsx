@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
+import ExportCsvButton from "../../components/ExportCsvButton";
 import Loading from "../../components/Loading";
 import { CrudOperation, DATE_FORMAT } from "../../data/constants";
 import { PurchaseRequest, purchaseRequestRepository } from "../../models/PurchaseRequestRepository";
@@ -104,6 +105,7 @@ export default function PurchaseRequests() {
           firebaseUser={currentFirebaseUser}
         />
       )}
+      {purchaseRequests.length !== 0 && <ExportCsvButton data={purchaseRequests} filename="requisicoes_de_compra.csv" />}
     </>
   );
 }

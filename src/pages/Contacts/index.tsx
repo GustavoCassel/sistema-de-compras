@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
+import ExportCsvButton from "../../components/ExportCsvButton";
 import Loading from "../../components/Loading";
 import { CrudOperation } from "../../data/constants";
 import { Contact, contactRepository } from "../../models/ContactRepository";
@@ -55,6 +56,7 @@ export default function Contacts() {
       </div>
       <ContactModal visible={modalVisible} setVisible={setModalVisible} crudOperation={crudOperation} contact={contact} updateContactsTable={updateTable} />
       {loading ? <Loading /> : <ContactsTable contacts={contacts} showModal={showModal} />}
+      {contacts.length !== 0 && <ExportCsvButton data={contacts} filename="contatos.csv" />}
     </>
   );
 }

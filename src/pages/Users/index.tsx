@@ -5,6 +5,7 @@ import { FirebaseUserContext } from "../../App";
 import Loading from "../../components/Loading";
 import { FirebaseUser, firebaseUserRepository } from "../../models/FirebaseUserRepository";
 import { Toast } from "../../utils/Alerts";
+import ExportCsvButton from "../../components/ExportCsvButton";
 
 export default function Users() {
   const loggedFirebaseUser = useContext(FirebaseUserContext);
@@ -162,6 +163,7 @@ export default function Users() {
           </tbody>
         </Table>
       )}
+      {users.length !== 0 && <ExportCsvButton data={users} filename="usuarios.csv" />}
     </div>
   );
 }
