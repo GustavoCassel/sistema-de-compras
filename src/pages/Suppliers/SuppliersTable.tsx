@@ -1,6 +1,4 @@
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Table from "react-bootstrap/Table";
+import { Button, ButtonGroup, Table } from "react-bootstrap";
 import activeImg from "../../assets/green_square.png";
 import inactiveImg from "../../assets/red_square.png";
 import { CrudOperation } from "../../data/constants";

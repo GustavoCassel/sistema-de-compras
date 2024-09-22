@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
+import { Button } from "react-bootstrap";
+import Swal from "sweetalert2";
 import Loading from "../../components/Loading";
 import { CrudOperation } from "../../data/constants";
 import { Supplier, supplierRepository } from "../../models/SupplierRepository";
 import SupplierModal from "./SupplierModal";
 import SuppliersTable from "./SuppliersTable";
-import Swal from "sweetalert2";
 
 export default function Suppliers() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);

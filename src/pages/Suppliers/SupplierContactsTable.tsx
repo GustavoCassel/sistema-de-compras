@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Table from "react-bootstrap/Table";
+import { Table } from "react-bootstrap";
 import activeImg from "../../assets/green_square.png";
 import inactiveImg from "../../assets/red_square.png";
 import Loading from "../../components/Loading";

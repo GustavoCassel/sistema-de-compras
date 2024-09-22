@@ -1,13 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { Badge } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Table from "react-bootstrap/Table";
+import { Badge, Button, Table } from "react-bootstrap";
+import Swal from "sweetalert2";
+import { FirebaseUserContext } from "../../App";
 import Loading from "../../components/Loading";
 import { FirebaseUser, firebaseUserRepository } from "../../models/FirebaseUserRepository";
 import { Toast } from "../../utils/Alerts";
-import { FirebaseUserContext } from "../../App";
-import Swal from "sweetalert2";
 
 export default function Users() {
   const loggedFirebaseUser = useContext(FirebaseUserContext);

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { CrudOperation } from "../../data/constants";
-import Loading from "../../components/Loading";
-
 import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
+import Loading from "../../components/Loading";
+import { CrudOperation } from "../../data/constants";
+import { Product, productRepository } from "../../models/ProductRepository";
 import ProductModal from "./ProductModal";
 import ProductsTable from "./ProductsTable";
-import { Product, productRepository } from "../../models/ProductRepository";
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);

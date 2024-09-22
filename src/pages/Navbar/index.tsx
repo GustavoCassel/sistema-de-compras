@@ -1,9 +1,6 @@
 import { signOut } from "firebase/auth";
 import { useContext } from "react";
-import { Badge } from "react-bootstrap";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import { Badge, Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink, Outlet } from "react-router-dom";
 import { FirebaseUserContext } from "../../App";
 import { auth } from "../../context/FirebaseContext";

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Contact, contactRepository } from "../../models/ContactRepository";
-import { CrudOperation } from "../../data/constants";
-import Loading from "../../components/Loading";
-import ContactsTable from "./ContactsTable";
 import { Button } from "react-bootstrap";
-import ContactModal from "./ContactModal";
 import Swal from "sweetalert2";
+import Loading from "../../components/Loading";
+import { CrudOperation } from "../../data/constants";
+import { Contact, contactRepository } from "../../models/ContactRepository";
+import ContactModal from "./ContactModal";
+import ContactsTable from "./ContactsTable";
 
 export default function Contacts() {
   const [contacts, setContacts] = useState<Contact[]>([]);

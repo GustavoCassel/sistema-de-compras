@@ -1,8 +1,7 @@
 import moment from "moment";
 import { FirebaseRepository } from "../context/FirebaseRepository";
-import { Supplier, supplierRepository } from "./SupplierRepository";
-import { PurchaseRequest } from "./PurchaseRequestRepository";
 import { DATE_FORMAT } from "../data/constants";
+import { Supplier, supplierRepository } from "./SupplierRepository";
 
 export class Quotation {
   id: string = "";

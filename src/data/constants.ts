@@ -1,5 +1,5 @@
-import { IntlConfig } from "react-currency-input-field/dist/components/CurrencyInputProps";
 import { formatValue as formatter } from "react-currency-input-field";
+import { IntlConfig } from "react-currency-input-field/dist/components/CurrencyInputProps";
 
 // Endpoints
 export const HOME_ENDPOINT: string = "/";

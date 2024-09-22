@@ -1,5 +1,4 @@
-import { Container } from "react-bootstrap";
-import Spinner, { SpinnerProps } from "react-bootstrap/Spinner";
+import { Container, Spinner, SpinnerProps } from "react-bootstrap";
 
 export default function Loading(props: SpinnerProps) {
   return (

@@ -1,6 +1,4 @@
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Table from "react-bootstrap/Table";
+import { Button, ButtonGroup, Table } from "react-bootstrap";
 import { CrudOperation, formatValue } from "../../data/constants";
 import { Quotation } from "../../models/QuotationRepository";
 

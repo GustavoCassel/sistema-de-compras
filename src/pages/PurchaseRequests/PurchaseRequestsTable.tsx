@@ -1,7 +1,4 @@
-import { Badge } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Table from "react-bootstrap/Table";
+import { Badge, Button, ButtonGroup, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { CrudOperation, QUOTATIONS_ENDPOINT } from "../../data/constants";
