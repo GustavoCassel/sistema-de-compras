@@ -28,6 +28,23 @@ export default function PurchaseRequestsTable({ purchaseRequests, firebaseUser, 
     navigate(`${QUOTATIONS_ENDPOINT}/${purchaseRequest.id}`);
   }
 
+  function getBadgeColor(status: PurchaseRequestStatus | undefined) {
+    if (!status) {
+      return "secondary";
+    }
+
+    switch (status) {
+      case PurchaseRequestStatus.Open:
+        return "danger";
+      case PurchaseRequestStatus.Quoting:
+        return "warning";
+      case PurchaseRequestStatus.Quoted:
+        return "success";
+      default:
+        return "secondary";
+    }
+  }
+
   if (!firebaseUser) {
     return <p>Usuário não encontrado</p>;
   }
@@ -59,9 +76,7 @@ export default function PurchaseRequestsTable({ purchaseRequests, firebaseUser, 
               {purchaseRequest.quantity} {purchaseRequest.product?.measurementUnit}
             </td>
             <td>
-              <Badge bg={purchaseRequest.status === "Aberta" ? "danger" : purchaseRequest.status === "Em cotação" ? "warning" : "success"}>
-                {purchaseRequest.status}
-              </Badge>
+              <Badge bg={getBadgeColor(purchaseRequest.status)}>{purchaseRequest.status}</Badge>
             </td>
             <td>{purchaseRequest.observations}</td>
             <td>
