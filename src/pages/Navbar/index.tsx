@@ -20,7 +20,13 @@ export default function AppHeader() {
 
   return (
     <>
-      <Navbar expand="lg">
+      <Navbar
+        expand="lg"
+        style={{
+          borderBottom: `2px solid rgba(0, 0, 0, ${isDarkMode ? 0.5 : 0.1})`,
+          boxShadow: `0 2px 4px rgba(0, 0, 0, ${isDarkMode ? 0.5 : 0.1})`,
+        }}
+      >
         <Container>
           <Navbar.Brand as={NavLink} to={HOME_ENDPOINT}>
             <i className="bi bi-cart3 me-2" />
@@ -33,12 +39,12 @@ export default function AppHeader() {
                 {user.isAdmin ? <AdminNavbar /> : <UserNavbar />}
                 <Nav className="ms-auto align-items-center">
                   <Nav.Item className="d-flex flex-column justify-content-center align-items-center">
-                    <Badge bg={user.isAdmin ? "danger" : "success"} className="ms-2" title={user.isAdmin ? "Administrador" : "Usuário"}>
+                    <Badge bg={user.isAdmin ? "danger" : "success"} className="ms-2">
                       {user.isAdmin ? "Admin" : "Usuário"}
                     </Badge>
-                    <NavbarText>
+                    <Navbar.Text>
                       <strong>{user.email}</strong>
-                    </NavbarText>
+                    </Navbar.Text>
                   </Nav.Item>
                   <Nav.Item>
                     <Nav.Link as={NavLink} to={LOGOUT_ENDPOINT} className="d-flex align-items-center">
@@ -47,9 +53,8 @@ export default function AppHeader() {
                     </Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                    <Button onClick={toggleDarkMode}>
-                      <i className={`bi bi-${isDarkMode ? "sun" : "moon-stars"} me-2`} />
-                      {isDarkMode ? "Claro" : "Escuro"}
+                    <Button variant={isDarkMode ? "light" : "dark"} onClick={toggleDarkMode}>
+                      <i className={isDarkMode ? "bi bi-sun" : "bi bi-moon-stars"} />
                     </Button>
                   </Nav.Item>
                 </Nav>
