@@ -38,7 +38,7 @@ export default function PurchaseRequestsTable({ purchaseRequests, firebaseUser, 
       case PurchaseRequestStatus.Open:
         return "danger";
       case PurchaseRequestStatus.Quoting:
-        return "warning";
+        return "info";
       case PurchaseRequestStatus.Quoted:
         return "success";
       default:
