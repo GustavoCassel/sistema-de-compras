@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import { Button, ButtonGroup, Table } from "react-bootstrap";
 import { CrudOperation, formatValue } from "../../data/constants";
 import { Quotation } from "../../models/QuotationRepository";
-import { useEffect, useState } from "react";
 
 export type QuotationsTableProps = {
   quotations: Quotation[];
