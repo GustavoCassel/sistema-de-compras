@@ -76,7 +76,6 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
   const [formDisabled, setFormDisabled] = useState(false);
 
   const watchSupplierType = watch("supplierType");
-  const document = watch("document");
   const cep = watch("cep");
 
   useEffect(() => {
@@ -86,18 +85,6 @@ export default function SupplierModal({ visible, setVisible, crudOperation, supp
 
     fullFillAddress();
   }, [cep]);
-
-  useEffect(() => {
-    if (!visible) {
-      return;
-    }
-
-    if (!document) {
-      return;
-    }
-
-    setValue("document", "", { shouldValidate: true });
-  }, [watchSupplierType]);
 
   async function fullFillAddress() {
     const onlyNumbers = cep.replace(/\D/g, "");
