@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { Badge, Button, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
+import ExportCsvButton from "../../components/ExportCsvButton";
 import Loading from "../../components/Loading";
 import { FirebaseUser, firebaseUserRepository } from "../../models/FirebaseUserRepository";
 import { Toast } from "../../utils/Alerts";
-import ExportCsvButton from "../../components/ExportCsvButton";
 
 export default function Users() {
   const loggedFirebaseUser = useContext(FirebaseUserContext);
@@ -129,32 +129,28 @@ export default function Users() {
               <tr key={user.id} style={{ verticalAlign: "middle" }}>
                 <td>{user.email}</td>
                 <td>
-                  <Badge bg={user.isAdmin ? "danger" : "success"} className="ms-2">
-                    {user.isAdmin ? "Admin" : "Usuário"}
-                  </Badge>
+                  <Badge bg={user.isAdmin ? "danger" : "success"}>{user.isAdmin ? "Admin" : "Usuário"}</Badge>
                 </td>
                 <td>
-                  <Badge bg={user.blocked ? "danger" : "success"} className="ms-2">
-                    {user.blocked ? "Bloqueado" : "Ativo"}
-                  </Badge>
+                  <Badge bg={user.blocked ? "danger" : "success"}>{user.blocked ? "Bloqueado" : "Ativo"}</Badge>
                 </td>
                 <td>
                   <Button
                     variant={user.isAdmin ? "success" : "danger"}
-                    className={user.isAdmin ? "bi bi-person-dash" : "bi bi-person-check"}
-                    style={{ marginRight: "5px", minWidth: "150px" }}
+                    style={{ marginRight: "5px", minWidth: "175px", textAlign: "left" }}
                     title={user.isAdmin ? "Revogar Admin" : "Tornar Admin"}
                     onClick={() => toggleAdmin(user)}
                   >
+                    <i className={user.isAdmin ? "bi bi-x-circle me-2" : "bi bi-check-circle me-2"} />
                     {user.isAdmin ? "Revogar Admin" : "Tornar Admin"}
                   </Button>
                   <Button
                     variant={user.blocked ? "success" : "danger"}
-                    className={user.blocked ? "bi bi-person-check" : "bi bi-person-dash"}
-                    style={{ marginRight: "5px", minWidth: "150px" }}
+                    style={{ marginRight: "5px", minWidth: "150px", textAlign: "left" }}
                     title={user.blocked ? "Desbloquear" : "Bloquear"}
                     onClick={() => toggleBlocked(user)}
                   >
+                    <i className={user.blocked ? "bi bi-unlock me-2" : "bi bi-ban me-2"} />
                     {user.blocked ? "Desbloquear" : "Bloquear"}
                   </Button>
                 </td>
