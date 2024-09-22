@@ -2,6 +2,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { User } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import { auth, navigateByLoginState } from "./context/FirebaseContext";
@@ -27,7 +28,6 @@ import PurchaseRequests from "./pages/PurchaseRequests";
 import Quotations from "./pages/Quotations";
 import Suppliers from "./pages/Suppliers";
 import Users from "./pages/Users";
-import { Container } from "react-bootstrap";
 
 type DarkThemeContextType = {
   isDarkMode: boolean;
@@ -53,6 +53,14 @@ export default function App() {
     auth.onAuthStateChanged((user) => updateFirebaseUserContext(user));
   }, []);
 
+  useEffect(() => {
+    navigateByLoginState(navigate);
+  }, [navigate]);
+
+  useEffect(() => {
+    adjustDarkMode();
+  }, [isDarkMode]);
+
   async function updateFirebaseUserContext(user: User | null) {
     if (!user || !user.email) {
       setUser(null);
@@ -64,14 +72,21 @@ export default function App() {
     setUser(firebaseUser);
   }
 
-  useEffect(() => {
-    navigateByLoginState(navigate);
-  }, [navigate]);
+  function adjustDarkMode() {
+    const htmlElement = document.querySelector("html");
+
+    if (!htmlElement) {
+      return;
+    }
+
+    htmlElement.setAttribute("data-theme", isDarkMode ? "dark" : "light");
+    htmlElement.setAttribute("data-bs-theme", isDarkMode ? "dark" : "light");
+  }
 
   return (
     <FirebaseUserContext.Provider value={user}>
       <DarkThemeContext.Provider value={{ isDarkMode, toggleDarkMode }}>
-        <Container fluid className={`p-0 m-0 ${isDarkMode ? "bg-dark text-light" : "bg-light text-dark"}`} style={{ height: "100vh", width: "100vw" }}>
+        <Container fluid className="p-0 m-0" style={{ height: "100vh" }}>
           {user?.isAdmin ? <AdminRoutes /> : <UserRoutes />}
         </Container>
       </DarkThemeContext.Provider>

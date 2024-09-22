@@ -19,7 +19,7 @@ export default function AppHeader() {
 
   return (
     <>
-      <Navbar expand="lg" bg={isDarkMode ? "dark" : "light"} data-bs-theme={isDarkMode ? "dark" : "light"}>
+      <Navbar expand="lg">
         <Container>
           <Navbar.Brand as={NavLink} to={HOME_ENDPOINT}>
             <i className="bi bi-cart3 me-2" />
