@@ -2,11 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Button, Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
+import { Col, Container, FloatingLabel, Form, Row } from "react-bootstrap";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { z } from "zod";
+import { Button } from "../components";
 import { auth, getFirebaseErrorDescription } from "../context/FirebaseContext";
 import { HOME_ENDPOINT } from "../data/constants";
 import { FirebaseUser, firebaseUserRepository } from "../models/FirebaseUserRepository";
@@ -25,7 +26,7 @@ const schema = z
 
 type FormData = z.infer<typeof schema>;
 
-export default function Auth() {
+export default function LoginRegister() {
   const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [buttonVisible, setButtonVisible] = useState(true);
@@ -120,7 +121,7 @@ export default function Auth() {
 
               {buttonVisible && (
                 <>
-                  <Button variant="primary" type="submit" className="w-100" onClick={handleSubmit(onSubmit)}>
+                  <Button type="submit" className="w-100" onClick={handleSubmit(onSubmit)}>
                     {isSubmitting ? (isLoginMode ? "Entrando..." : "Registrando...") : isLoginMode ? "Entrar" : "Registrar"}
                   </Button>
                   <Form.Control.Feedback type="invalid" className="d-block mt-2">

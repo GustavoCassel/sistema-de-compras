@@ -1,6 +1,7 @@
-import { Button, ButtonGroup, Table } from "react-bootstrap";
+import { ButtonGroup } from "react-bootstrap";
 import activeImg from "../../assets/green_square.png";
 import inactiveImg from "../../assets/red_square.png";
+import { Button, Table } from "../../components";
 import { CrudOperation } from "../../data/constants";
 import { Contact } from "../../models/ContactRepository";
 
@@ -15,7 +16,7 @@ export default function ContactsTable({ contacts, showModal }: ContactsTableProp
   }
 
   return (
-    <Table striped bordered hover size="sm" responsive>
+    <Table>
       <thead>
         <tr>
           <th>Status</th>

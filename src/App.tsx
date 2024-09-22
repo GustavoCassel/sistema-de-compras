@@ -27,12 +27,27 @@ import PurchaseRequests from "./pages/PurchaseRequests";
 import Quotations from "./pages/Quotations";
 import Suppliers from "./pages/Suppliers";
 import Users from "./pages/Users";
+import { Container } from "react-bootstrap";
+
+type DarkThemeContextType = {
+  isDarkMode: boolean;
+  toggleDarkMode: () => void;
+};
 
 export const FirebaseUserContext = createContext<FirebaseUser | null>(null);
+export const DarkThemeContext = createContext<DarkThemeContextType>({
+  isDarkMode: false,
+  toggleDarkMode: () => {},
+});
 
 export default function App() {
   const navigate = useNavigate();
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  function toggleDarkMode() {
+    setIsDarkMode((prev) => !prev);
+  }
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => updateFirebaseUserContext(user));
@@ -53,7 +68,15 @@ export default function App() {
     navigateByLoginState(navigate);
   }, [navigate]);
 
-  return <FirebaseUserContext.Provider value={user}>{user?.isAdmin ? <AdminRoutes /> : <UserRoutes />}</FirebaseUserContext.Provider>;
+  return (
+    <FirebaseUserContext.Provider value={user}>
+      <DarkThemeContext.Provider value={{ isDarkMode, toggleDarkMode }}>
+        <Container fluid className={`p-0 m-0 ${isDarkMode ? "bg-dark text-light" : "bg-light text-dark"}`} style={{ height: "100vh", width: "100vw" }}>
+          {user?.isAdmin ? <AdminRoutes /> : <UserRoutes />}
+        </Container>
+      </DarkThemeContext.Provider>
+    </FirebaseUserContext.Provider>
+  );
 }
 
 function UserRoutes() {

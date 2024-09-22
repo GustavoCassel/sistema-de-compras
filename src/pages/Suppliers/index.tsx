@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
-import ExportCsvButton from "../../components/ExportCsvButton";
-import Loading from "../../components/Loading";
+import { Button, ExportCsvButton, Loading } from "../../components";
 import { CrudOperation } from "../../data/constants";
 import { Supplier, supplierRepository } from "../../models/SupplierRepository";
 import SupplierModal from "./SupplierModal";
@@ -47,7 +45,7 @@ export default function Suppliers() {
     <>
       <div className="d-flex justify-content-between">
         <h2>Fornecedores</h2>
-        <Button variant="primary" onClick={() => showModal(CrudOperation.Create)}>
+        <Button onClick={() => showModal(CrudOperation.Create)}>
           <i className="bi bi-plus-square me-2" />
           Cadastrar
         </Button>

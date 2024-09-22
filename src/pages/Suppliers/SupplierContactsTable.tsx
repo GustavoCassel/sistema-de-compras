@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
 import activeImg from "../../assets/green_square.png";
 import inactiveImg from "../../assets/red_square.png";
-import Loading from "../../components/Loading";
+import { Loading, Table } from "../../components";
 import { Contact, contactRepository } from "../../models/ContactRepository";
 import { Supplier } from "../../models/SupplierRepository";
 
@@ -27,7 +26,7 @@ export default function SupplierContactsTable({ supplier }: SupplierContactsTabl
   return loading ? (
     <Loading />
   ) : (
-    <Table striped bordered hover size="sm" responsive>
+    <Table>
       <thead>
         <tr>
           <th>Ativo</th>

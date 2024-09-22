@@ -1,6 +1,7 @@
-import { Badge, Button, ButtonGroup, Table } from "react-bootstrap";
+import { Badge, ButtonGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Button, Table } from "../../components";
 import { CrudOperation, QUOTATIONS_ENDPOINT } from "../../data/constants";
 import { FirebaseUser } from "../../models/FirebaseUserRepository";
 import { PurchaseRequest, PurchaseRequestStatus } from "../../models/PurchaseRequestRepository";
@@ -54,7 +55,7 @@ export default function PurchaseRequestsTable({ purchaseRequests, firebaseUser, 
   }
 
   return (
-    <Table striped bordered hover size="sm" responsive>
+    <Table>
       <thead>
         <tr>
           <th>Data da Solicitação</th>

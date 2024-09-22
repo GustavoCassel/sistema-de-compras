@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { Badge, Button, Table } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
-import ExportCsvButton from "../../components/ExportCsvButton";
-import Loading from "../../components/Loading";
+import { Button, ExportCsvButton, Loading, Table } from "../../components";
 import { FirebaseUser, firebaseUserRepository } from "../../models/FirebaseUserRepository";
 import { Toast } from "../../utils/Alerts";
 
@@ -115,7 +114,7 @@ export default function Users() {
       {loading ? (
         <Loading />
       ) : (
-        <Table striped bordered hover size="sm" responsive>
+        <Table>
           <thead>
             <tr>
               <th>E-mail</th>

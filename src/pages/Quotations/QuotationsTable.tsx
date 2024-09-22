@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, ButtonGroup, Table } from "react-bootstrap";
+import { ButtonGroup } from "react-bootstrap";
+import { Button, Table } from "../../components";
 import { CrudOperation, formatValue } from "../../data/constants";
 import { Quotation } from "../../models/QuotationRepository";
 
@@ -35,7 +36,7 @@ export default function QuotationsTable({ quotations, showModal }: QuotationsTab
   }
 
   return (
-    <Table striped bordered hover size="sm" responsive>
+    <Table>
       <thead>
         <tr>
           <th>Data da Cotação</th>

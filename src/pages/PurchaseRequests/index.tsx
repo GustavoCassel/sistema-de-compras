@@ -1,10 +1,8 @@
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
-import ExportCsvButton from "../../components/ExportCsvButton";
-import Loading from "../../components/Loading";
+import { Button, ExportCsvButton, Loading } from "../../components";
 import { CrudOperation, DATE_FORMAT } from "../../data/constants";
 import { PurchaseRequest, purchaseRequestRepository } from "../../models/PurchaseRequestRepository";
 import PurchaseRequestModal from "./PurchaseRequestModal";
@@ -50,7 +48,6 @@ export default function PurchaseRequests() {
 
       await purchaseRequestRepository.fullFillStatus(requests);
 
-      // (da mais antiga para a mais nova)
       requests = requests.sort((a, b) => {
         const dateA = moment(a.requestDate, DATE_FORMAT);
         const dateB = moment(b.requestDate, DATE_FORMAT);
@@ -82,7 +79,7 @@ export default function PurchaseRequests() {
       <div className="d-flex justify-content-between">
         <h2>{currentFirebaseUser?.isAdmin ? "Todas as Requisições de Compra" : "Suas Requisições de Compra"}</h2>
         {!currentFirebaseUser?.isAdmin && (
-          <Button variant="primary" onClick={() => showModal(CrudOperation.Create)}>
+          <Button onClick={() => showModal(CrudOperation.Create)}>
             <i className="bi bi-plus-square me-2" />
             Cadastrar
           </Button>

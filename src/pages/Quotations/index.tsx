@@ -1,10 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FirebaseUserContext } from "../../App";
-import ExportCsvButton from "../../components/ExportCsvButton";
-import Loading from "../../components/Loading";
+import { Button, ExportCsvButton, Loading } from "../../components";
 import { CrudOperation } from "../../data/constants";
 import { PurchaseRequest, purchaseRequestRepository, PurchaseRequestStatus } from "../../models/PurchaseRequestRepository";
 import { Quotation, quotationRepository } from "../../models/QuotationRepository";
@@ -105,7 +103,7 @@ export default function Quotations() {
       <div className="d-flex justify-content-between">
         <h2>Cotações da Requisição de Compra: "{purchaseRequestId}"</h2>
         {currentFirebaseUser?.isAdmin && (
-          <Button variant="primary" onClick={() => showModal(CrudOperation.Create)}>
+          <Button onClick={() => showModal(CrudOperation.Create)}>
             <i className="bi bi-plus-square me-2" />
             Cadastrar
           </Button>
