@@ -33,7 +33,7 @@ export default function Users() {
     }
   }
 
-  function toggleAdmin(user: FirebaseUser) {
+  async function toggleAdmin(user: FirebaseUser) {
     try {
       if (user.isAdmin) {
         if (isRootAdmin(user)) {
@@ -44,9 +44,9 @@ export default function Users() {
           throw new Error("Você não pode revogar seu próprio admin.");
         }
 
-        firebaseUserRepository.revokeAdmin(user.id);
+        await firebaseUserRepository.revokeAdmin(user.id);
       } else {
-        firebaseUserRepository.makeAdmin(user.id);
+        await firebaseUserRepository.makeAdmin(user.id);
       }
     } catch (error) {
       const err = error as Error;
@@ -58,7 +58,7 @@ export default function Users() {
       return;
     }
 
-    loadFirebaseUsers();
+    await loadFirebaseUsers();
 
     Toast.fire({
       icon: "success",
@@ -66,10 +66,10 @@ export default function Users() {
     });
   }
 
-  function toggleBlocked(user: FirebaseUser) {
+  async function toggleBlocked(user: FirebaseUser) {
     try {
       if (user.blocked) {
-        firebaseUserRepository.unblock(user.id);
+        await firebaseUserRepository.unblock(user.id);
       } else {
         if (isRootAdmin(user)) {
           throw new Error("O root admin não pode ser bloqueado.");
@@ -79,7 +79,7 @@ export default function Users() {
           throw new Error("Você não pode bloquear seu próprio usuário.");
         }
 
-        firebaseUserRepository.block(user.id);
+        await firebaseUserRepository.block(user.id);
       }
     } catch (error) {
       const err = error as Error;
@@ -91,7 +91,7 @@ export default function Users() {
       return;
     }
 
-    loadFirebaseUsers();
+    await loadFirebaseUsers();
 
     Toast.fire({
       icon: "success",
