@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Badge, Container, Nav, Navbar, NavbarText } from "react-bootstrap";
+import { Badge, Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink, Outlet } from "react-router-dom";
 import { DarkThemeContext, FirebaseUserContext } from "../../App";
 import { Button } from "../../components";
