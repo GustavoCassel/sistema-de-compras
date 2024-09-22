@@ -54,6 +54,7 @@ export default function QuotationsTable({ quotations, showModal }: QuotationsTab
             <td
               style={{
                 backgroundColor: calculateRowColor(quotation),
+                color: "black",
               }}
             >
               {formatValue(quotation.price)}
