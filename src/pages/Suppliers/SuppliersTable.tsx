@@ -30,7 +30,7 @@ export default function SuppliersTable({ suppliers, showModal }: SuppliersTableP
       </thead>
       <tbody>
         {suppliers.map((supplier) => (
-          <tr key={supplier.id}>
+          <tr key={supplier.id} style={{ verticalAlign: "middle" }}>
             <td>
               <img src={supplier.active ? activeImg : inactiveImg} alt={supplier.active ? "Ativo" : "Inativo"} width="20" height="20" className="me-2" />
               {supplier.active ? "Ativo" : "Inativo"}

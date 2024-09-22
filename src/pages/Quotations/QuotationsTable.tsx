@@ -25,7 +25,7 @@ export default function QuotationsTable({ quotations, showModal }: QuotationsTab
       </thead>
       <tbody>
         {quotations.map((quotation) => (
-          <tr key={quotation.id}>
+          <tr key={quotation.id} style={{ verticalAlign: "middle" }}>
             <td>{quotation.quotationDate}</td>
             <td>{quotation.supplier?.name}</td>
             <td>{formatValue(quotation.price)}</td>

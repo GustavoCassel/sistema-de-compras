@@ -68,7 +68,7 @@ export default function PurchaseRequestsTable({ purchaseRequests, firebaseUser, 
       </thead>
       <tbody>
         {purchaseRequests.map((purchaseRequest) => (
-          <tr key={purchaseRequest.id}>
+          <tr key={purchaseRequest.id} style={{ verticalAlign: "middle" }}>
             <td>{purchaseRequest.requestDate}</td>
             {showRequester && <td>{purchaseRequest.requesterEmail}</td>}
             <td>{purchaseRequest.product?.name}</td>

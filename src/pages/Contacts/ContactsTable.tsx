@@ -28,7 +28,7 @@ export default function ContactsTable({ contacts, showModal }: ContactsTableProp
       </thead>
       <tbody>
         {contacts.map((contact) => (
-          <tr key={contact.id}>
+          <tr key={contact.id} style={{ verticalAlign: "middle" }}>
             <td>
               <img src={contact.active ? activeImg : inactiveImg} alt={contact.active ? "Ativo" : "Inativo"} width="20" height="20" className="me-2" />
               {contact.active ? "Ativo" : "Inativo"}

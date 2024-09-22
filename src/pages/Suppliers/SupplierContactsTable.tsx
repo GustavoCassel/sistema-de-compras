@@ -43,7 +43,7 @@ export default function SupplierContactsTable({ supplier }: SupplierContactsTabl
           </tr>
         ) : (
           contacts.map((contact) => (
-            <tr key={contact.id}>
+            <tr key={contact.id} style={{ verticalAlign: "middle" }}>
               <td>
                 <img src={contact.active ? activeImg : inactiveImg} alt={contact.active ? "Ativo" : "Inativo"} width="20" height="20" />
               </td>

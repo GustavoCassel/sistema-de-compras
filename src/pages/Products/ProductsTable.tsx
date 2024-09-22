@@ -27,7 +27,7 @@ export default function ProductsTable({ products, showModal }: ProductsTableProp
       </thead>
       <tbody>
         {products.map((product) => (
-          <tr key={product.id}>
+          <tr key={product.id} style={{ verticalAlign: "middle" }}>
             <td>
               <img src={product.active ? activeImg : inactiveImg} alt={product.active ? "Ativo" : "Inativo"} width="20" height="20" className="me-2" />
               {product.active ? "Ativo" : "Inativo"}

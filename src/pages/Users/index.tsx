@@ -126,7 +126,7 @@ export default function Users() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id}>
+              <tr key={user.id} style={{ verticalAlign: "middle" }}>
                 <td>{user.email}</td>
                 <td>
                   <Badge bg={user.isAdmin ? "danger" : "success"} className="ms-2">
